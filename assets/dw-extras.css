@@ -1,0 +1,29 @@
+/* Document workspace extras (mockup of document-workspace-screen.tsx): content edit (visual | Markdown source) and the
+ * document chat panel. Tokens only; classes follow the app (dw-*). Loaded by document-workspace.html. */
+.viewer-side { position: relative; }
+.dw-edit-pane { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.dw-toolbar { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--border); background: var(--surface); }
+.dw-toolbar .grow { flex: 1; }
+.dw-edit-body { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 0; }
+.dw-edit-body.is-source { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.dw-edit-body > * { min-height: 0; overflow: auto; padding: var(--sp-4); }
+.dw-edit-body.is-source > .dw-src { border-right: 1px solid var(--border); }
+.dw-src { width: 100%; resize: none; font-family: var(--font-mono); font-size: var(--fs-mono); color: var(--text); background: var(--field-bg); border: 0; }
+.dw-visual { background: var(--paper-bg); }
+.dw-visual [contenteditable]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.dw-page-chip { display: inline-block; padding: 0 var(--sp-2); border-radius: var(--r-sm); background: var(--surface-2); color: var(--muted); font-size: var(--fs-xs); }
+.dw-note { margin: 0; padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); color: var(--chip-warning-fg); }
+.dw-chat { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; background: var(--surface); }
+.dw-chat[hidden] { display: none; }
+.dw-chat-head { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--border); }
+.dw-chat-head h2 { margin: 0; font-size: var(--fs-body); }
+.dw-chat-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-3); }
+.dw-chat-q { align-self: flex-end; max-width: 85%; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-md); background: var(--active-bg); }
+.dw-chat-a { max-width: 95%; font-size: var(--fs-body); }
+.dw-chat-warn, .dw-chat-note { margin: 0 0 var(--sp-2); font-size: var(--fs-sm); color: var(--chip-warning-fg); }
+.dw-chat-note { color: var(--muted); }
+.dw-chat-cites { margin: var(--sp-2) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--sp-1); }
+.dw-chat-cite { display: flex; gap: var(--sp-2); width: 100%; padding: var(--sp-1) var(--sp-2); text-align: left; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); cursor: pointer; }
+.dw-chat-cite:hover { background: var(--surface-2); }
+.dw-chat-input { display: flex; align-items: flex-end; gap: var(--sp-2); padding: var(--sp-3); border-top: 1px solid var(--border); }
+.dw-chat-input textarea { flex: 1; }

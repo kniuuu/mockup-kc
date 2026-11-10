@@ -1,0 +1,1246 @@
+/* ECP mockups: Thay đổi & Phê duyệt (changes-approval-v2.html, cr-approval.js).
+ * Synced one way from the micro-frontend remotes/quality/src/features/changes-approval/components/changes-approval.css
+ * (c42ff75f): same rules, except the page layout (here .ca2-main is <main class="app-main"> itself, there it is a child)
+ * and the mockup-only pieces at the end (native <dialog> boxes, hidden count, busy buttons). Tokens only. */
+.ca2-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+.ca2-top {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  padding: 0 var(--sp-3) 0 var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.ca2-top > .tabs {
+  margin-bottom: -1px;
+} /* the selected tab's underline sits on the header's bottom border */
+.ca2-top > .ca2-sel {
+  align-self: center;
+  margin: var(--sp-2) 0;
+  height: var(--h-sm);
+  font-size: var(--fs-sm);
+}
+.ca2-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--sp-1_5);
+  margin-left: var(--sp-1_5);
+  border-radius: var(--r-pill);
+  background: var(--action);
+  color: var(--on-action);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.ca2-sel {
+  width: auto;
+  min-width: 180px;
+}
+.ca2-pane[hidden] {
+  display: none;
+}
+
+/* tables */
+.ca2-card .ca2-scroll {
+  border: 0;
+  border-radius: 0;
+} /* the table runs edge to edge inside the card: one outer border, no inner frame */
+.ca2-table {
+  min-width: 980px;
+}
+.ca2-table[hidden] {
+  display: none;
+}
+.ca2-table td {
+  vertical-align: middle;
+} /* single-line cells centre on the row; title + subtitle stay one group */
+.ca2-table tbody tr {
+  cursor: pointer;
+}
+.ca2-table tbody tr:hover {
+  background: var(--surface-2);
+}
+.ca2-table tbody tr.is-checked {
+  background: var(--active-bg);
+}
+.ca2-table tbody tr[aria-current='true'] {
+  box-shadow: inset 3px 0 0 var(--indicator);
+  background: var(--active-bg);
+}
+.ca2-table th[aria-sort='ascending'] .th-sort::after {
+  content: '↑';
+}
+.ca2-table th[aria-sort='descending'] .th-sort::after {
+  content: '↓';
+}
+.ca2-idc {
+  width: 72px;
+  white-space: nowrap;
+}
+.ca2-id {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ca2-id.is-static {
+  color: var(--muted);
+  text-decoration: none;
+  cursor: default;
+}
+.ca2-tc {
+  min-width: 240px;
+  max-width: 340px;
+}
+.ca2-ttl {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 320px;
+}
+.ca2-kbc {
+  max-width: 150px;
+}
+.ca2-kbc span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ca2-by,
+.ca2-at {
+  white-space: nowrap;
+  font-size: var(--fs-sm);
+}
+.ca2-by .muted {
+  font-size: var(--fs-xs);
+}
+.ca2-go {
+  width: 24px;
+  color: var(--muted);
+  font-size: var(--fs-h3);
+}
+.ca2-why {
+  max-width: 260px;
+  font-size: var(--fs-sm);
+}
+.ca2-why span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ca2-empty {
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.ca2-empty[hidden] {
+  display: none;
+}
+.ca2-empty b {
+  color: var(--text);
+}
+.ca2-pane > .ek-foot {
+  flex: none;
+  flex-wrap: wrap;
+}
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.nowrap {
+  white-space: nowrap;
+}
+
+/* type chips */
+.ca2-type {
+  white-space: nowrap;
+}
+.ca2-t-meta {
+  color: var(--chip-info-fg);
+  background: var(--chip-info-bg);
+}
+/* KNOWLEDGE_RELEASE (ADR-006) */
+.ca2-t-rel {
+  color: var(--chip-success-fg);
+  background: var(--chip-success-bg);
+}
+/* GLOBAL_MERGE (ADR-007) */
+.ca2-t-gm {
+  color: var(--chip-warning-fg);
+  background: var(--chip-warning-bg);
+}
+.ca2-gm-table td {
+  vertical-align: top;
+}
+.ca2-gm-rn {
+  display: flex;
+  gap: var(--sp-1);
+}
+.ca2-relg + .ca2-relg {
+  margin-top: var(--sp-3);
+}
+
+/* request dialog: one large modal for every request type; header · [sidebar | workspace] · fixed actions */
+.ca2-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  z-index: var(--z-overlay);
+}
+.ca2-scrim[hidden],
+.ca2-panel[hidden] {
+  display: none;
+}
+.ca2-panel {
+  background: var(--surface);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
+.ca2-drawer {
+  position: fixed;
+  inset: var(--sp-6);
+  z-index: calc(var(--z-overlay) + 1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-3);
+  overflow: hidden;
+}
+.ca2-ss {
+  padding: var(--sp-4) 0;
+}
+.ca2-ss + .ca2-ss {
+  border-top: 1px solid var(--border);
+}
+.ca2-ss .ca2-sub {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+  font-weight: 700;
+}
+.ca2-kv.is-side {
+  grid-template-columns: minmax(84px, 38%) minmax(0, 1fr);
+  margin: 0;
+  gap: var(--sp-2) var(--sp-3);
+  overflow-wrap: anywhere;
+}
+.ca2-kv.is-side dt {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-sm);
+  padding-top: 1px;
+}
+.ca2-dhd {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-5) var(--sp-6) var(--sp-4);
+}
+.ca2-dhd .icon-btn[data-close] {
+  margin: calc(-1 * var(--sp-1)) calc(-1 * var(--sp-2)) 0 0;
+}
+.ca2-hmeta {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  min-width: 0;
+}
+.ca2-hmeta span + span::before {
+  content: '·';
+  margin: 0 var(--sp-2);
+}
+.ca2-dbody:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+.ca2-dhl {
+  flex: 1;
+  min-width: 0;
+}
+.ca2-dmeta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.ca2-dhd h2 {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+}
+.ca2-dbody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--sp-5) var(--sp-5);
+}
+.ca2-act {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-6);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.ca2-who {
+  flex: 1 1 260px;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.ca2-who b {
+  color: var(--text);
+}
+.ca2-btns {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* detail content */
+.ca2-kv {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--sp-1_5) var(--sp-4);
+  margin: var(--sp-4) 0 0;
+  font-size: var(--fs-sm);
+}
+.ca2-kv dt {
+  color: var(--muted);
+}
+.ca2-kv dd {
+  margin: 0;
+  min-width: 0;
+}
+.ca2-kv.is-sm {
+  grid-template-columns: 100px minmax(0, 1fr);
+  margin-top: var(--sp-2);
+  gap: var(--sp-1) var(--sp-3);
+}
+.ca2-bad {
+  color: var(--chip-error-fg);
+  font-weight: 700;
+}
+
+.ca2-sub {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-label);
+  line-height: var(--lh-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+.ca2-sub {
+  margin-top: var(--sp-4);
+}
+.ca2-why-t {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  font-size: var(--fs-body);
+}
+.ca2-why-t.is-ai {
+  background: var(--chip-local-bg);
+  border-left: 3px solid var(--chip-local-fg);
+}
+.ca2-ban {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+}
+.ca2-ban.is-warn {
+  background: var(--chip-warning-bg);
+  color: var(--chip-warning-fg);
+}
+.ca2-ban.is-err {
+  background: var(--chip-error-bg);
+  color: var(--chip-error-fg);
+}
+.ca2-note {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-xs);
+}
+del {
+  color: var(--chip-error-fg);
+  background: var(--chip-error-bg);
+  text-decoration: line-through;
+  padding: 0 var(--sp-0_5);
+  border-radius: 2px;
+}
+ins {
+  color: var(--chip-success-fg);
+  background: var(--chip-success-bg);
+  text-decoration: none;
+  padding: 0 var(--sp-0_5);
+  border-radius: 2px;
+}
+.field-err[hidden] {
+  display: none;
+}
+.is-cur {
+  background-color: var(--surface-2);
+}
+@media (max-width: 900px) {
+  .ca2-drawer {
+    inset: 0;
+    border: 0;
+    border-radius: 0;
+  } /* the proposed changes come first, request info after */
+  .ca2-dhd {
+    padding: var(--sp-4);
+  }
+  .ca2-act {
+    padding: var(--sp-3) var(--sp-4);
+  }
+}
+@media (max-width: 640px) {
+  .ca2-kv {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .ca2-kv dd {
+    margin-bottom: var(--sp-2);
+  }
+  .ca2-dhd,
+  .ca2-dbody,
+  .ca2-act {
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+  }
+  .ca2-sel {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  .ca2-btns {
+    width: 100%;
+  }
+  .ca2-btns .btn {
+    flex: 1 1 auto;
+  }
+}
+.ca2-table.table thead th {
+  white-space: nowrap;
+}
+.ca2-table .th-sort {
+  text-transform: inherit;
+  letter-spacing: inherit;
+  font-weight: inherit;
+}
+
+.ca2-reason {
+  margin: 0;
+  font-size: var(--fs-body);
+}
+.ca2-reason {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  white-space: pre-line;
+}
+.ca2-reason + .ca2-note {
+  margin-top: var(--sp-1);
+}
+
+/* review controls: compact, one height; the pressed view mode in the info tint */
+.ca2-drawer .segmented > [aria-pressed='true'] {
+  background: var(--chip-info-bg);
+  color: var(--chip-info-fg);
+  box-shadow: none;
+}
+.ca2-drawer .segmented > :not([aria-pressed='true']):hover {
+  background: var(--surface-2);
+}
+
+[data-k][hidden] {
+  display: none;
+}
+
+/* list page: the card starts right under the header (no blank strip above it) */
+.app-main.ca2-main {
+  padding-top: 0;
+}
+.ca2-main > .ca2-card {
+  border-top: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+}
+/* list sits flush against the app sidebar: the sidebar's own border-right is the only separator (overlay sidebar ≤1023px keeps the gutter) */
+@media (min-width: 1024px) {
+  .app-main.ca2-main {
+    padding-left: 0;
+  }
+  .ca2-main > .ca2-card {
+    border-left: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+/* list alignment: the active underline spans exactly the tab content (text + count), one gap between them;
+   the Type header group and the type chips share the column centre */
+.ca2-top .tabs > [role='tab']::after {
+  left: var(--sp-3);
+  right: var(--sp-3);
+}
+.ca2-top .tabs .ca2-count {
+  margin-left: 0;
+}
+
+/* ---- web additions ---- */
+.ca2-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0;
+  flex-wrap: wrap;
+}
+.ca2-tools > .ca2-sel {
+  height: var(--h-sm);
+  font-size: var(--fs-sm);
+}
+.ca2-drawer:focus {
+  outline: none;
+}
+
+/* base pieces the mockup takes from shell.css (.tabs, 631-651) and screens.css (.ek-foot / .ek-pager, 1725-1732);
+   the app scopes them per screen, so they are repeated here for this screen and its panel */
+:is(.ca2-main, .ca2-drawer) .tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-1);
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+:is(.ca2-main, .ca2-drawer) .tabs::-webkit-scrollbar {
+  display: none;
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab'] {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1_5);
+  min-height: var(--h-lg);
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab']::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab']:hover {
+  color: var(--text);
+}
+:is(.ca2-main, .ca2-drawer)
+  .tabs
+  > [role='tab']:not([aria-selected='true']):hover::after {
+  background: var(--border);
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab'][aria-selected='true'] {
+  color: var(--text);
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab'][aria-selected='true']::after {
+  background: var(--indicator);
+}
+:is(.ca2-main, .ca2-drawer) .tabs > [role='tab']:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+/* the card fills the screen under the header: the table scrolls inside it and the pager stays at the bottom */
+.app-main.ca2-main {
+  height: calc(100vh - 64px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ca2-main > .ca2-card {
+  flex: 1;
+  min-height: 0;
+}
+.ca2-card > .ca2-pane:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ca2-pane > .ca2-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ---- current mockup (assets/cr-approval.css): bulk bar, list cells, request dialog, review workspace, dialogs ---- */
+.ca2-bulk {
+  flex: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: var(--fs-sm);
+}
+.ca2-bulkrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1_5) var(--sp-4);
+  flex-wrap: wrap;
+}
+.ca2-bulkrow > span:first-child {
+  margin-right: auto;
+}
+.ca2-bulkwarn {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-2);
+  color: var(--chip-warning-fg);
+  flex-wrap: wrap;
+}
+.ca2-bulkwarn > span:nth-child(2) {
+  flex: 1 1 280px;
+}
+.ca2-warn-ico {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-pill);
+  background: var(--chip-warning-bg);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+}
+.ca2-ck {
+  width: 40px;
+}
+.ca2-ck input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--action);
+  vertical-align: middle;
+}
+.ca2-table .th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ca2-table .th-sort:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+.ca2-table th.ca2-tyc,
+.ca2-table td.ca2-tyc {
+  text-align: center;
+}
+.ca2-obj {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+  color: var(--muted);
+}
+.ca2-code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.ca2-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-sm);
+  background: var(--chip-local-bg);
+  color: var(--chip-local-fg);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* request dialog body: [request panel | workspace] */
+.ca2-dmain {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(260px, 25%) minmax(0, 1fr);
+  gap: 0;
+  padding: 0 var(--sp-6) var(--sp-4);
+}
+.ca2-dmain.is-noside {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ca2-side {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--sp-5);
+  border: 1px solid var(--border);
+  border-right: 0;
+  border-radius: var(--r-md) 0 0 var(--r-md);
+  background: var(--surface-2);
+}
+.ca2-ws {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--surface);
+  overflow: hidden;
+}
+.ca2-dmain.is-noside .ca2-ws {
+  border-radius: var(--r-md);
+}
+.ca2-copy {
+  width: 28px;
+  height: 28px;
+  margin: -4px 0 -4px var(--sp-1);
+  vertical-align: middle;
+}
+.ca2-copy .ico,
+.ca2-ext .ico,
+.ca2-tbc .btn .ico,
+.ca2-doch .btn .ico {
+  width: 14px;
+  height: 14px;
+}
+.ca2-ext {
+  color: var(--text);
+  text-decoration: none;
+}
+.ca2-ext:hover {
+  color: var(--link);
+  text-decoration: underline;
+}
+.ca2-ext .ico {
+  margin-left: 4px;
+  vertical-align: -2px;
+  color: var(--muted);
+}
+.ca2-side .ca2-reason,
+.ca2-side .ca2-why-t {
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-sm);
+  background: var(--surface);
+}
+.ca2-hrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-6);
+  margin-top: var(--sp-2);
+}
+.ca2-hby {
+  color: var(--text);
+}
+.ca2-wsh {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+}
+.ca2-sbt {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.ca2-sbt:hover {
+  background: var(--field-bg);
+}
+.ca2-sbt:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+.ca2-sbt svg {
+  width: 18px;
+  height: 18px;
+}
+.ca2-sbt[aria-expanded='false'] svg {
+  transform: rotate(180deg);
+}
+.ca2-side > .ca2-sbt {
+  float: right;
+  margin: 10px calc(-1 * var(--sp-2)) 0 var(--sp-2);
+}
+
+/* review workspace: toolbar · Current | Proposed cards (or one merged column) */
+.ca2-sec {
+  margin-top: var(--sp-5);
+}
+.ca2-tb {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0 calc(-1 * var(--sp-5));
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.ca2-tbt {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.ca2-tbt h3,
+.ca2-dvh h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-h3);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+  font-weight: 700;
+}
+.ca2-tbt h3 .ico {
+  width: 18px;
+  height: 18px;
+  color: var(--chip-info-fg);
+}
+.ca2-tbl {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ca2-tbs {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.ca2-tbc {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.ca2-tbc .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.ca2-tbc .btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ca2-tbc .segmented {
+  margin-left: var(--sp-2);
+}
+.ca2-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.ca2-pos {
+  min-width: 7em;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.ca2-docs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 var(--sp-4);
+  margin-top: var(--sp-4);
+}
+.ca2-doc {
+  min-width: 0;
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+.ca2-docs.is-meta > .ca2-doc {
+  grid-row: span var(--rows);
+}
+.ca2-doc.is-rows > .ca2-mlist {
+  display: contents;
+}
+.ca2-doch {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.ca2-doch .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.ca2-doci {
+  flex: none;
+  display: inline-flex;
+  padding-top: 2px;
+  color: var(--muted);
+}
+.ca2-doci .ico {
+  width: 20px;
+  height: 20px;
+}
+.ca2-docl {
+  flex: 1 1 140px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--fs-sm);
+}
+.ca2-docl .muted {
+  font-size: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+.ca2-doc.is-new .ca2-doch {
+  background: var(--chip-success-bg);
+}
+.ca2-doc.is-new .ca2-doci,
+.ca2-doc.is-new .ca2-docl b {
+  color: var(--chip-success-fg);
+}
+.ca2-dvc {
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.ca2-dvh {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+.ca2-mlist {
+  margin: 0;
+}
+.ca2-mrow {
+  display: grid;
+  grid-template-columns: minmax(96px, 36%) minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.ca2-mrow + .ca2-mrow {
+  border-top: 1px solid var(--border);
+}
+.ca2-mrow dt {
+  color: var(--muted);
+}
+.ca2-mrow dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ca2-mrow.is-cur {
+  box-shadow: inset 3px 0 0 var(--chip-info-fg);
+}
+.ca2-doc.is-new .ca2-mrow.is-chg {
+  background: var(--chip-success-bg);
+}
+.ca2-gap {
+  color: var(--muted);
+}
+.ca2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-1_5);
+  margin: 0;
+  padding: 2px 0;
+  list-style: none;
+}
+.ca2-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+  overflow-wrap: anywhere;
+}
+.ca2-tag.is-del {
+  background: var(--chip-error-bg);
+  border-color: transparent;
+  color: var(--chip-error-fg);
+}
+.ca2-tag del {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+.ca2-tagck {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.ca2-tagck input {
+  accent-color: var(--action);
+}
+.ca2-mt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.ca2-mt th,
+.ca2-mt td {
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.ca2-mt thead th {
+  color: var(--muted);
+  font-weight: 700;
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+.ca2-mt tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ca2-edited {
+  background: var(--chip-info-bg);
+  color: var(--chip-info-fg);
+  font-weight: 600;
+}
+
+/* confirm / result dialogs (mockup .ca2-dlg) on the shared .q-dialog box */
+.q-dialog.ca2-dlg {
+  width: 520px;
+}
+.ca2-dlg label {
+  display: block;
+  margin-bottom: var(--sp-1);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.ca2-dlg .textarea {
+  width: 100%;
+}
+.ca2-dlg .field-err {
+  margin: var(--sp-1) 0 0;
+  color: var(--chip-error-fg);
+  font-size: var(--fs-sm);
+}
+.ca2-req {
+  color: var(--chip-error-fg);
+}
+.ca2-bklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.ca2-bklist li {
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-sm);
+}
+.ca2-bklist li:last-child {
+  border-bottom: 0;
+}
+.ca2-bklist b,
+.ca2-resg li b {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-right: var(--sp-1);
+}
+.ca2-resg + .ca2-resg {
+  margin-top: var(--sp-3);
+}
+.ca2-resg h3 {
+  margin: 0 0 var(--sp-1);
+  font-size: var(--fs-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.ca2-resg ul {
+  margin: 0;
+  padding-left: var(--sp-5);
+  font-size: var(--fs-sm);
+}
+.ca2-resg li {
+  margin-bottom: var(--sp-1);
+}
+
+@media (max-width: 1100px) {
+  .ca2-docs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-4);
+  }
+}
+@media (max-width: 900px) {
+  .ca2-dmain {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 0 var(--sp-4) var(--sp-4);
+  }
+  .ca2-side {
+    flex: none;
+    overflow: visible;
+    margin-top: var(--sp-3);
+    border-right: 1px solid var(--border);
+    border-radius: var(--r-md);
+  }
+  .ca2-ws {
+    display: block;
+    flex: none;
+    order: -1;
+    overflow: visible;
+    border-radius: var(--r-md);
+  }
+  .ca2-ws .ca2-dbody {
+    overflow: visible;
+  }
+  .ca2-tb {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .ca2-wsh,
+  .ca2-side {
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+  }
+  .ca2-tb {
+    margin: 0 calc(-1 * var(--sp-4));
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+  }
+  .ca2-navl {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .ca2-tbc {
+    margin-left: 0;
+  }
+}
+
+/* ---- mockup only: native <dialog> confirm boxes (the app uses Radix), hidden count, busy buttons ---- */
+dialog.q-dialog.ca2-dlg {
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+  box-shadow: var(--elev-3);
+}
+.ca2-dlg .qd-body + label,
+.ca2-dlg .qd-body + .ca2-bklist {
+  margin-top: var(--sp-1);
+}
+.ca2-count[hidden] {
+  display: none;
+}
+.btn[aria-busy='true'] {
+  cursor: progress;
+}
+
+/* pending preset change requests (ADR-007), above the review table */
+.ca2-crs {
+  flex: none;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-4);
+  list-style: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: var(--fs-sm);
+}
+.ca2-crs li + li {
+  margin-top: var(--sp-1);
+}

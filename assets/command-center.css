@@ -1,0 +1,176 @@
+/* Command Center visual layer (docs/03-ux/design-system/command-center-DESIGN.md, applied in DESIGN.md).
+   Loaded LAST on every page so it wins over shell/screens/ontology/ecp-graph. Tokens live in shell.css (= libs/design-tokens/tokens.css);
+   this file restyles the shell and components, and keeps the layout fixes made on the Backbase branch. */
+
+/* ---------- application shell: header, brand cell and sidebar share the main content surface (light and dark) ---------- */
+.app-header, .sidebar { background: var(--surface); }
+.app-header { border-bottom: 0; }
+.hdr-brand, .hdr-main { box-shadow: inset 0 -1px var(--border); }   /* one 1px line under the whole header */
+.breadcrumb .crumb-current { color: var(--text); }
+/* brand text "Context Platform": sans caps in the fresh red-orange (--action: 4.5:1 light, 5.7:1 dark) */
+.brand-text { color: var(--action); font-size: 14px; line-height: 1.1; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+@media (max-width: 1023px) { .brand-text { display: none; } }   /* drawer header leaves 67px: logo only */
+
+/* sidebar navigation: hover = --surface-2; active = solid red-orange fill (--action), white text (no left bar) */
+.nav-label { font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 600; letter-spacing: var(--ls-label); color: var(--muted); }
+.nav-item { border-radius: var(--r-md); padding: 0 12px; font-size: var(--fs-sm); font-weight: 500; color: var(--text); }
+.nav-item:hover { background: var(--surface-2); color: var(--text); }
+.nav-item:is(.active, [aria-current="page"]), .nav-item:is(.active, [aria-current="page"]):hover { background: var(--action); color: var(--on-action); font-weight: 600; }
+.nav-item:is(.active, [aria-current="page"])::before { display: none; }
+/* nav groups: one gap variable (grows with window height, capped at 48px); expanded = plain gap,
+   collapsed = half above + half below the divider line so the line sits centred between groups */
+.sidebar-nav > #sb { --nav-gap: clamp(16px, calc(5vh - 12px), 48px); display: flex; flex-direction: column; gap: var(--nav-gap); }
+.sidebar-nav > #sb > .nav-section + .nav-section { margin-top: 0; }
+:is(.app.is-collapsed, html.ecp-collapsed .app) .sidebar-nav > #sb { gap: 0; }
+:is(.app.is-collapsed, html.ecp-collapsed .app) .sidebar-nav > #sb > .nav-section + .nav-section { margin-top: calc(var(--nav-gap) / 2); padding-top: calc(var(--nav-gap) / 2); }
+/* short windows: fixed small gap, and scroll instead of clipping the last items */
+.sidebar-nav { overflow-y: auto; }
+@media (max-height: 800px) { .sidebar-nav > #sb { --nav-gap: 16px; } }
+@media (max-height: 760px) { .sidebar-nav > #sb { --nav-gap: 8px; } }
+
+/* ---------- operational labels: small sans caps with wider tracking (column headers, overlines, panel / ToC / filter labels) ---------- */
+.eyebrow, .table thead th, .overline, .os-tree-h, .os-lgd-h, .os-sec-h, .ecpg-lg-t, .wiki-toc-h, .pk-group-h,
+.tag-group-h, .cbx-group, .tax-types-h, .tax-dl dt, .es-filter-label, .tax-detail .cfg-side-head > div > .bold {
+  font-family: var(--font-label); font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 600;
+  letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--muted);
+}
+.eyebrow { display: block; margin: 0 0 var(--sp-2); }
+/* column headers wrap between words instead of overflowing */
+.table.table thead th { white-space: normal; overflow-wrap: normal; word-break: keep-all; }
+.kpi-label { font-size: var(--fs-sm); line-height: var(--lh-sm); font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--muted); }
+
+/* ---------- type: bold, compact headings ---------- */
+h1, h2, h3, .card-title, .modal-title, .empty-title { font-weight: 700; letter-spacing: -.01em; }
+.h-two em { font-style: normal; color: var(--action); }   /* large display text: same fresh tone as the nav fill (4.5:1) */
+.es-hero h1 { font-size: var(--fs-display); line-height: 1.15; font-weight: 700; letter-spacing: -.025em; }
+.kpi-value { font-weight: 700; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+.sum-card .kpi-value { font-size: var(--fs-stat); line-height: var(--lh-stat); }
+
+/* ---------- buttons: compact sans label; primary = orange fill, white text ---------- */
+.btn { font-weight: 500; transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out); }
+.q-col-filter.q-fbtn, .ecpg-fbtn, .ecpg-legend-btn, .os-grp-btn { font-weight: 500; }
+
+/* ---------- cards: quiet white surfaces, 12px corners, thin border + subtle shadow ---------- */
+:where(.card, .panel, .pane, .modal) { position: relative; }   /* anchors absolute children; zero specificity */
+.card, .panel, .pane { border-radius: var(--r-lg); box-shadow: var(--elev-1); }
+:is(.card, .panel, .pane) :is(.card, .panel, .pane) { box-shadow: none; }   /* nested cards stay flat */
+.modal { border-radius: var(--r-lg); box-shadow: var(--elev-3); }
+
+/* ---------- navigation link with arrow: underline slides in, arrow nudges right ---------- */
+.link-arrow { display: inline-flex; align-items: center; gap: var(--sp-2); color: var(--link); text-decoration: none; cursor: pointer; font-weight: 600;
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat; transition: background-size var(--dur-link) var(--ease-link); }
+.link-arrow::after { content: "→"; transition: transform var(--dur-2) var(--ease-out); }
+.link-arrow:hover { background-size: 100% 1px; }
+.link-arrow:hover::after { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) { .link-arrow, .link-arrow::after { transition: none !important; } }
+
+/* ---------- timeline: the job pipeline steps (.jsteps) ---------- */
+.jstep::before { width: 1px; }
+.jstep.is-running::before { background: linear-gradient(var(--indicator) 0 15px, var(--border) 15px 100%); }
+.jstep.is-running .jstep-dot { border-color: var(--indicator); color: var(--indicator); }
+.jstep.is-running .jstep-dot::after { border-color: var(--indicator); }
+
+/* ---------- Excel-style column filters: label + funnel button in the header cell ---------- */
+.q-col-head { display: inline-flex; align-items: center; gap: 4px; }
+.q-col-pop { font-family: var(--font-sans); font-size: var(--fs-body); line-height: var(--lh-body); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
+
+/* ---------- Progress column ---------- */
+.job-table .jc-prog, .jd-table .jc-prog { width: 96px; }
+.job-table .jc-st { width: 200px; }
+.jd-table .jc-dst { width: 200px; }
+.job-prog-cell .job-prog { justify-content: flex-start; }
+
+/* ---------- line & dot system (DESIGN.md · Lines and dots) ----------
+   lines: 1px --border (divider/frame/rail) · 1px --border-strong (control edge) · 3px (selection --sel / status colour)
+          · 1px dashed --border-strong (placeholder)
+   dots:  6px status dot (next to text) · 8px timeline milestone · 10px legend / colour swatch */
+.wiki-toc-link { border-left-width: 1px; }
+.wiki-toc-link.is-active { border-left-width: 3px; padding-left: 8px; }
+.q-vtl-item { border-left-width: 1px; }
+.q-vtl-item.is-cur { border-left-width: 3px; padding-left: 16px; }
+.pb-step::before { width: 1px; }
+.pb-num { border-width: 1px; }
+.empty-state { border: 1px dashed var(--border-strong); }
+.agent-steps .st i { width: 6px; height: 6px; }
+.legend-dot { border-width: 1px; }
+.os-relsw::before { width: 10px; height: 0; background: none; border-top: 1px solid var(--muted); transform: translate(-50%, -50%); box-shadow: none; }
+.os-relsw.inst::before { width: 10px; height: 0; border-top: 1px dashed var(--muted); }
+.jstep-dot { border-width: 1px; }
+.tax-type { border-left-width: 3px; padding-left: calc(5px + var(--lvl, 0) * 16px); }
+
+/* ---------- toolbars: one control height (--h-md 32px) and one text size ---------- */
+.segmented > * { height: calc(var(--h-md) - 6px); }
+.os-head :is(select.input, .icon-btn, .btn) { height: var(--h-md); }
+.os-head .icon-btn { width: var(--h-md); }
+.os-head select.input { font-size: var(--fs-body); }
+.os-head #os-kb { min-width: 220px; }
+/* no doubled lines: a toolbar's bottom border already separates it from the layout below */
+.os-head + .os-layout, .art-head + .os-layout { border-top: 0; }
+
+/* ---------- Knowledge Graph: the canvas runs edge to edge (no main padding / margin) ---------- */
+.app-main.kg-main { padding: 0; margin: 0; }
+
+/* ---------- Knowledge detail: compact KPI tiles (one-line value at --fs-kpi) ---------- */
+.detail-main .sum-cards { gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.detail-main .sum-card { padding: var(--sp-3) var(--sp-4); }
+.detail-main .sum-card .kpi-value { font-size: var(--fs-kpi); line-height: var(--lh-kpi); white-space: nowrap; }
+
+/* ---------- red-orange as text: --action is a fill; text, icons and outlines on surfaces use --action-text (AA) ---------- */
+.os-combo-opt.os-combo-new, .art-open:hover, .art-open:focus-visible, .wiki-toc-link:hover, .tax-add .btn-ghost:hover, .tax-dl .tax-link:hover,
+.q-col-filter.is-active, .q-col-pop .q-pop-opt[aria-pressed="true"], .q-fbar .q-col-filter.q-fbtn.is-active,
+#panel-docs .doc-table thead th[data-col-filter].is-filtered .xf-btn,
+.ask-acts .icon-btn[aria-pressed="true"], .ask-acts .icon-btn[aria-expanded="true"], .ask-acts .icon-btn.is-done,
+.ask-welcome-ico, .kg-chat-tools [data-kgc-hist][aria-expanded="true"], .es-submit[disabled] { color: var(--action-text); }
+.q-col-filter.is-active svg path { fill: var(--action-text); stroke: var(--action-text); }
+.q-fbar .q-col-filter.q-fbtn.is-active, .es-submit[disabled] { border-color: var(--action-text); }
+.mode-toggle button[aria-pressed="true"] { color: var(--action-text); box-shadow: inset 0 0 0 1px var(--action-text); }
+
+/* ---------- tab selection underline: anchored to the label (3px under the 22px line box), not to the tab bottom,
+   so it sits close to the text and never touches the toolbar / table border below, whatever the tab height ---------- */
+.tabs > [role="tab"]::after { top: calc(50% + 14px); bottom: auto; border-radius: var(--r-pill); }
+/* tab bars and the head rows that hold them: transparent, the card / page surface shows through */
+.tabs, .art-head:has(> .tabs), .cfg-subhead:has(> .tabs) { background: transparent; }
+
+/* ---------- Ask conversation (answer / thread / state), as the web (enterprise-search.css): no top search bar, one flat
+   768px reading column, the question bar docked at the bottom of the scroll area (margin-top:auto, sticky when the
+   turns are long) with the disclaimer under it, no card frame; the history toggle stands alone at the right edge ---------- */
+.es-body > .es-scroll.ask-scroll { display: flex; flex-direction: column; }
+.es-body > .es-scroll.ask-scroll > *, .es-body > .es-scroll.ask-scroll :is(.ask-turn, .ask-follow-wrap, .empty-state) { flex: none; width: 100%; max-width: 768px; margin-inline: auto; box-sizing: border-box; }
+.es-body > .es-scroll.ask-scroll > [data-state-default] { max-width: none; }
+.empty-state h1 { font-size: var(--fs-h2); line-height: var(--lh-h2); margin-top: var(--sp-3); }
+body.es-flat .es-layout .es-body > .es-scroll.ask-scroll .ask-follow-wrap { margin: auto auto 0; bottom: 0; padding: var(--sp-2_5) 0 var(--sp-2); border-top: 1px solid var(--border); background: var(--surface); }
+.ask-disclaimer { margin: var(--sp-2) 0 0; text-align: center; font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--muted); }
+/* the history toggle (shown while history is closed) stays at the right edge of .es-body, outside the centred column */
+.es-body { position: relative; }
+.es-body .icon-btn.hist-open { position: absolute; top: 0; right: var(--sp-0_5); z-index: 1; }
+/* state page: the state wrappers dissolve so each state's turn and question bar are direct children of .ask-scroll, as in the web */
+.es-scroll.ask-scroll > [data-state-default], .es-scroll.ask-scroll [data-state-key]:not([hidden]) { display: contents; }
+/* Ask turn spacing (web: wide gap between turns, no rule; tight action row under the answer) */
+body.es-flat .ask-turn { gap: var(--sp-4); }
+body.es-flat .ask-turn + .ask-turn { border-top: 0; padding-top: 0; margin-top: var(--sp-8); }
+body.es-flat .ask-turn .agent-steps { margin-bottom: 0; }
+body.es-flat .answer p + p, body.es-flat .answer ul { margin-top: var(--sp-4); }
+body.es-flat .answer li + li { margin-top: var(--sp-1_5); }
+body.es-flat .ask-turn .ask-acts { margin-top: var(--sp-2); padding-bottom: var(--sp-3); }
+/* web keeps the border on the inset blocks (steps, collapsed turn, reason form) */
+body.es-flat .agent-steps, body.es-flat .ask-turn-sum, body.es-flat .fb-form { border: 1px solid var(--border); }
+/* the page's actions (Reveal, trace, Evidence Graph) at the right end of the answer's action row */
+.ask-acts-end { margin-left: auto; display: inline-flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--sp-2); }
+.ask-page-acts-in { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.ask-page-acts-in .ico, .ask-acts-end .ico { width: 16px; height: 16px; }
+/* a source's document name opens it in the document workspace */
+.cite-doc { color: var(--text); text-decoration: none; }
+.cite-doc:hover b { text-decoration: underline; }
+.cite-doc:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--r-sm); }
+/* follow-ups: the suggested chips and "New question" (a chip like them, always last) flow in one wrapping row above the question box */
+.ask-follow-chips { display: contents; }
+.ask-follow-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1_5); margin-bottom: var(--sp-2); }
+.ask-follow-row > .ask-new-q { display: inline-flex; align-items: center; gap: var(--sp-1); text-decoration: none; white-space: nowrap; }
+.ask-follow-row > .ask-new-q .ico { width: 14px; height: 14px; flex: none; }
+.ask-follow-chips .chip, .ask-follow-row > .ask-new-q { height: auto; min-height: var(--h-sm); border: 0; font: inherit; font-size: var(--fs-sm); white-space: normal; text-align: left; cursor: pointer; }
+.ask-follow-row > .ask-new-q { white-space: nowrap; }
+.ask-follow-chips .chip:hover, .ask-follow-row > .ask-new-q:hover { color: var(--text); }
+/* streaming: the progress line (sparkle + the step running now) with Stop at the right, under the answer so far */
+.search-progress.ask-progress { margin: 0 0 var(--sp-3); }
+.search-progress.ask-progress .grow { flex: 1; }
+.search-progress .sp-step { color: var(--muted); font-weight: 400; }

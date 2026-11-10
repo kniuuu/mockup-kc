@@ -1,0 +1,152 @@
+/* Backbase-style visual layer (DESIGN.md). Loaded LAST on every page so it wins over shell/screens/ontology/ecp-graph.
+   Layout and behaviour stay in the other files; this file only restyles. */
+
+/* ---------- mono labels: short overlines only (eyebrow, nav group, column headers, panel / ToC / filter labels) ---------- */
+.eyebrow, .nav-label, .table thead th, .overline, .os-tree-h, .os-lgd-h, .os-sec-h, .ecpg-lg-t, .wiki-toc-h, .pk-group-h,
+.tag-group-h, .cbx-group, .tax-types-h, .tax-dl dt, .es-filter-label, .tax-detail .cfg-side-head > div > .bold {
+  font-family: var(--font-label); font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 500;
+  letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--muted);
+}
+.eyebrow { display: block; margin: 0 0 var(--sp-2); }
+/* column headers wrap to 2 lines instead of overflowing; tighter tracking than other labels */
+.table.table thead th { white-space: normal; letter-spacing: .04em; overflow-wrap: normal; word-break: keep-all; }   /* wrap between words only: "TYPE" never splits into T / Y */
+/* KPI labels stay sentence-case sans: long Vietnamese labels in mono caps wrap to 3 lines */
+.kpi-label { font-family: var(--font-sans); font-size: var(--fs-sm); line-height: var(--lh-sm); font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--muted); }
+
+/* ---------- type: medium headings, tighter tracking ---------- */
+h1, h2, h3, .card-title, .modal-title, .empty-title { font-weight: 600; letter-spacing: -.01em; }
+/* two-tone heading (presentation screens): <h1 class="h-two">Chào mừng tới <em>Knowledge Discovery</em></h1> */
+.h-two em { font-style: normal; color: var(--action); }
+.es-hero h1 { font-size: var(--fs-display); line-height: 1.15; font-weight: 500; letter-spacing: -.02em; }
+
+/* ---------- app shell: sidebar on the content surface (white in light theme) ---------- */
+.sidebar { background: var(--surface); }
+/* nav groups: one gap variable (grows with window height, capped at 48px); expanded = plain gap,
+   collapsed = half above + half below the divider line so the line sits centred between groups */
+.sidebar-nav > #sb { --nav-gap: clamp(16px, calc(5vh - 12px), 48px); display: flex; flex-direction: column; gap: var(--nav-gap); }
+.sidebar-nav > #sb > .nav-section + .nav-section { margin-top: 0; }
+:is(.app.is-collapsed, html.ecp-collapsed .app) .sidebar-nav > #sb { gap: 0; }
+:is(.app.is-collapsed, html.ecp-collapsed .app) .sidebar-nav > #sb > .nav-section + .nav-section { margin-top: calc(var(--nav-gap) / 2); padding-top: calc(var(--nav-gap) / 2); }
+/* short windows: fixed small gap, and scroll instead of clipping the last items */
+.sidebar-nav { overflow-y: auto; }
+@media (max-height: 800px) { .sidebar-nav > #sb { --nav-gap: 16px; } }
+@media (max-height: 760px) { .sidebar-nav > #sb { --nav-gap: 8px; } }
+/* guide marker: small square where the header meets the sidebar edge */
+.app-header::after { content: ""; position: absolute; left: calc(var(--sb-w, 264px) - 2px); bottom: -2px; width: 4px; height: 4px; background: var(--border-strong); pointer-events: none; }
+@media (max-width: 1023px) { .app-header::after { display: none; } }
+
+/* ---------- navigation link with arrow: underline slides in, arrow nudges right ---------- */
+.link-arrow { display: inline-flex; align-items: center; gap: var(--sp-2); color: var(--link); text-decoration: none; cursor: pointer;
+  font-family: var(--font-label); font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat; transition: background-size var(--dur-link) var(--ease-link); }
+.link-arrow::after { content: "→"; transition: transform var(--dur-2) var(--ease-out); }
+.link-arrow:hover { background-size: 100% 1px; }
+.link-arrow:hover::after { transform: translateX(2px); }
+
+/* ---------- stat cards: the KPI tiles (.sum-card / .kpi) ---------- */
+.kpi-value { font-weight: 500; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.sum-card .kpi-value { font-size: var(--fs-stat); line-height: var(--lh-stat); }
+
+/* ---------- timeline: the job pipeline steps (.jsteps) ---------- */
+.jstep::before { width: 1px; }
+.jstep.is-running::before { background: linear-gradient(var(--indicator) 0 15px, var(--border) 15px 100%); }
+.jstep.is-running .jstep-dot { border-color: var(--indicator); color: var(--indicator); }
+.jstep.is-running .jstep-dot::after { border-color: var(--indicator); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before, .link-arrow, .link-arrow::after { transition: none !important; }
+}
+
+/* ---------- everything square: no rounded rectangles, no circles (hard-coded px radii included) ---------- */
+*, *::before, *::after { border-radius: 0 !important; }
+
+/* ---------- buttons (Backbase): mono uppercase label; corner brackets on md Primary only, 3px outside the button ---------- */
+.btn { font-family: var(--font-label); font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
+.btn-sm { font-size: 11px; letter-spacing: .08em; }
+:where(.btn) { position: relative; }
+.btn-primary:not(.btn-sm) { --cm: var(--border-strong); }
+.btn-primary:not(.btn-sm)::before {
+  content: ""; position: absolute; inset: -4px; pointer-events: none;
+  background:
+    linear-gradient(var(--cm), var(--cm)) left top / var(--corner) var(--corner-w) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) left top / var(--corner-w) var(--corner) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) right top / var(--corner) var(--corner-w) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) right top / var(--corner-w) var(--corner) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) left bottom / var(--corner) var(--corner-w) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) left bottom / var(--corner-w) var(--corner) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) right bottom / var(--corner) var(--corner-w) no-repeat,
+    linear-gradient(var(--cm), var(--cm)) right bottom / var(--corner-w) var(--corner) no-repeat;
+  transition: inset var(--dur-3) var(--ease-out);
+}
+.btn-primary:not(.btn-sm):hover { --cm: var(--action); }
+.btn-primary:not(.btn-sm):hover::before { inset: -6px; }
+:is(td, th, .menu, .popover, .toast) .btn::before, .btn:is([disabled], .is-disabled)::before { display: none; }
+.btn { transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out); }
+
+/* cards anchor their absolutely positioned children; zero specificity: sticky / absolute / fixed rules elsewhere still win */
+:where(.card, .panel, .pane, .modal) { position: relative; }
+/* filter dropdown buttons that are not .btn match the button label style */
+.q-col-filter.q-fbtn, .ecpg-fbtn, .ecpg-legend-btn, .os-grp-btn { font-family: var(--font-label); font-size: var(--fs-label); line-height: var(--lh-label); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
+/* Excel-style column filters: label + funnel button in the header cell */
+.q-col-head { display: inline-flex; align-items: center; gap: 4px; }
+.q-col-pop { font-family: var(--font-sans); font-size: var(--fs-body); line-height: var(--lh-body); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
+
+/* ---------- Progress column: the ring stays a CIRCLE (deliberate exception to "everything square") ---------- */
+.job-progress-ring, .job-progress-ring::before { border-radius: 50% !important; }
+.job-table .jc-prog, .jd-table .jc-prog { width: 96px; }
+.job-table .jc-st { width: 200px; }
+.jd-table .jc-dst { width: 200px; }
+.job-prog-cell .job-prog { justify-content: flex-start; }
+
+/* ---------- guide marker (header × sidebar intersection) in orange; cards have no markers ---------- */
+.app-header::after { background: var(--accent-2); }
+
+/* ---------- line & dot system (DESIGN.md · Lines and dots) ----------
+   lines: 1px --border (divider/frame/rail) · 1px --border-strong (control edge) · 3px (selection --sel / status colour)
+          · 1px dashed --border-strong (placeholder)
+   dots:  6px status dot (next to text) · 8px timeline milestone · 10px legend / colour swatch · 5px orange guide marker */
+/* rails: 1px; the active item gets the 3px selection bar (padding compensates so text doesn't shift) */
+.wiki-toc-link { border-left-width: 1px; }
+.wiki-toc-link.is-active { border-left-width: 3px; padding-left: 8px; }
+.q-vtl-item { border-left-width: 1px; }
+.q-vtl-item.is-cur { border-left-width: 3px; padding-left: 16px; }
+.pb-step::before { width: 1px; }
+.pb-num { border-width: 1px; }
+/* placeholder frames */
+.empty-state { border: 1px dashed var(--border-strong); }
+/* status dot next to text: 6px */
+.agent-steps .st i { width: 6px; height: 6px; }
+/* legend swatch: 10px, 1px edge */
+.legend-dot { border-width: 1px; }
+/* relationship legend = a 1px line (entity = square swatch), instance relationship = dashed line */
+.os-relsw::before { width: 10px; height: 0; background: none; border-top: 1px solid var(--muted); transform: translate(-50%, -50%); box-shadow: none; }
+.os-relsw.inst::before { width: 10px; height: 0; border-top: 1px dashed var(--muted); }
+/* guide marker: 5px */
+.app-header::after { width: 5px; height: 5px; left: calc(var(--sb-w, 264px) - 3px); bottom: -3px; }
+/* step markers: 1px ring like every other line */
+.jstep-dot { border-width: 1px; }
+/* taxonomy tree: selection bar 3px like nav / table rows (padding -1px so labels don't shift) */
+.tax-type { border-left-width: 3px; padding-left: calc(5px + var(--lvl, 0) * 16px); }
+
+/* ---------- toolbars: one control height (--h-md 32px) and one text size ---------- */
+/* segmented frame = 32px like md controls: items 26px + 2px padding + 1px border on each side */
+.segmented > * { height: calc(var(--h-md) - 6px); }
+.os-head :is(select.input, .icon-btn, .btn) { height: var(--h-md); }
+.os-head .icon-btn { width: var(--h-md); }
+.os-head select.input { font-size: var(--fs-body); }
+
+/* ---------- no doubled lines: a toolbar's bottom border already separates it from the layout below ---------- */
+.os-head + .os-layout, .art-head + .os-layout { border-top: 0; }
+
+.os-head #os-kb { min-width: 220px; }
+
+/* ---------- Knowledge Graph: the canvas runs edge to edge (no main padding / margin) ---------- */
+.app-main.kg-main { padding: 0; margin: 0; }
+
+/* ---------- Brand text "Context Platform": Backbase eyebrow style (mono, uppercase, .1em), bold; 15px fills the logo-to-toggle space (16px clips) ---------- */
+.brand-text { font-family: var(--font-label); font-size: 15px; line-height: 1; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ---------- Knowledge detail: compact KPI tiles (one-line value at --fs-kpi) ---------- */
+.detail-main .sum-cards { gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.detail-main .sum-card { padding: var(--sp-3) var(--sp-4); }
+.detail-main .sum-card .kpi-value { font-size: var(--fs-kpi); line-height: var(--lh-kpi); white-space: nowrap; }

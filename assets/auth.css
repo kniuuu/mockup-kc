@@ -1,0 +1,51 @@
+/* Auth pages (login, forgot-password, reset-password, verify-email). Mirrors micro-frontend/web/src/features/auth/components/login.css.
+   Standalone: loads after shell.css only. Pixel heading font '5 Text Uppercase' (same file as web/public/fonts; licence not confirmed, see web styles/fonts.css). */
+@font-face { font-family: '5 Text Uppercase'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/5-text-uppercase.ttf) format('truetype'); }
+.login { display: grid; grid-template-columns: 1fr min(50%, calc((var(--login-h) - var(--sp-6) * 2) * 0.8)); grid-template-rows: auto 1fr; grid-template-areas: 'top visual' 'main visual';
+  gap: 0 var(--sp-10); zoom: var(--login-zoom, 1); min-height: var(--login-h); position: relative; padding: var(--sp-6) var(--sp-8); background: var(--surface); color: var(--text); --login-ink: #000; --login-h: calc(100vh / var(--login-zoom, 1));
+  --font-pixel: '5 Text Uppercase', ui-monospace, Menlo, Consolas, monospace; }
+html[data-theme='dark'] .login { --login-ink: #fff; }
+.login-top { grid-area: top; padding-bottom: var(--sp-6); }
+.login-logo { height: 32px; width: auto; }
+.login-logo.is-dark { display: none; }
+html[data-theme='dark'] .login-logo.is-light { display: none; }
+html[data-theme='dark'] .login-logo.is-dark { display: inline; }
+.login-main { grid-area: main; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-bottom: var(--sp-10); }
+.login-product { font-family: var(--font-pixel); font-weight: 400; font-size: calc(var(--fs-display) * 1.5); line-height: 1; margin: 0 0 var(--sp-1); }
+.login-product-accent { color: var(--action-text); }
+.login-i { display: inline-block; background: linear-gradient(to bottom, var(--action-text) 0 var(--i-dot, 38%), currentColor var(--i-dot, 38%) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.login-tagline { font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); color: var(--login-ink); margin: 0 0 var(--sp-6); }
+.login-card { width: 100%; max-width: 400px; padding: var(--sp-6); text-align: left; background: var(--surface); color: var(--text); border: 0; border-radius: var(--r-lg); box-shadow: none; }
+.login-head { margin-bottom: var(--sp-5); text-align: center; }
+.login-title { font-size: var(--fs-h2); line-height: var(--lh-h2); margin: 0 0 var(--sp-1); }
+.login-full { width: 100%; justify-content: center; }
+.login .btn-primary.login-full { height: var(--h-lg); }
+.login .btn.is-busy { cursor: progress; opacity: .7; }
+.login .btn.is-busy::before { content: ''; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: var(--r-pill); animation: login-spin .8s linear infinite; }
+@keyframes login-spin { to { transform: rotate(360deg); } }
+.login .input { width: 100%; }
+.login .field.has-error .input { border-color: var(--chip-error-fg); }
+.login .field-err { color: var(--chip-error-fg); font-size: var(--fs-sm); margin: 0; }
+.login .field-err[hidden] { display: none; }
+.login-notice { color: var(--action-text); font-size: var(--fs-sm); margin: 0 0 var(--sp-3); }
+.login-ok { color: var(--approve); font-size: var(--fs-sm); margin: 0 0 var(--sp-3); }
+.login-or { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-4) 0; color: var(--muted); font-size: var(--fs-sm); }
+.login-or::before, .login-or::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+.login-switch { margin: var(--sp-5) 0 0; text-align: center; font-size: var(--fs-sm); color: var(--muted); }
+.login-intro { margin: 0 0 var(--sp-4); }
+.login-forgot { margin: calc(var(--sp-2) * -1) 0 var(--sp-3); text-align: right; font-size: var(--fs-sm); }
+.login-link { background: none; border: 0; padding: 0; font: inherit; color: var(--link); text-decoration: underline; cursor: pointer; }
+.login-tools { position: absolute; left: var(--sp-8); bottom: var(--sp-6); display: flex; gap: var(--sp-2); }
+.login-tool { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 var(--sp-2); border: 1px solid var(--border-strong); border-radius: var(--r-control);
+  background: transparent; color: var(--text); font: inherit; font-size: var(--fs-sm); font-weight: 700; text-decoration: none; cursor: pointer; }
+.login-tool:hover { background: var(--active-bg); }
+.login-tool:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.login-visual { grid-area: visual; position: relative; align-self: center; aspect-ratio: 4 / 5; }
+/* banner bucket unreachable or empty: plain brand panel (the carousel itself is runtime media, not mocked) */
+.login-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--action); border-radius: var(--r-lg); }
+.login-fallback img { width: min(60%, 320px); height: auto; }
+[data-st][hidden] { display: none; }
+/* first paint on 16:9 screens, as web login.css (the formula min(width / 1880, height / 1060) is applied by auth.js) */
+@media (min-width: 2560px) { .login { --login-zoom: 1.36; } }
+@media (min-width: 3840px) { .login { --login-zoom: 2.04; } }
+@media (max-width: 800px) { .login { grid-template-columns: 1fr; grid-template-areas: 'top' 'main'; padding: var(--sp-4); } .login-visual { display: none; } }

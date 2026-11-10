@@ -1,0 +1,171 @@
+/* ECP mockups: Neo4j-style interactive graph (ecp-graph.js). Colors resolve from shell.css tokens. */
+.ecpg {
+  --ecpg-caption: #1F2A37;
+  --ecpg-ring: #FFFFFF;
+  --ecpg-hint: var(--indicator);               /* orange-red linked hint: #C72F20 on --chip-neutral-bg 4.77:1 */
+  position: relative; width: 100%; height: 100%; min-height: 260px; overflow: hidden;
+  background: var(--surface) radial-gradient(var(--border) 1px, transparent 1px) 0 0 / 22px 22px;
+  font-family: inherit; color: var(--text);
+}
+[data-theme="dark"] .ecpg { --ecpg-ring: var(--surface); --ecpg-hint: #FF6B4A; }  /* #FF6B4A on #232833 5.24:1 (--indicator dark only 3.71) */
+.graph-canvas > .ecpg { position: absolute; inset: 0; }
+.ecpg-svg { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.ecpg-svg:active { cursor: grabbing; }
+.ecpg-svg:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
+
+/* nodes */
+.ecpg-node { cursor: pointer; transition: opacity .15s; }
+.ecpg-node .ecpg-body { stroke-width: 2; }
+.ecpg-node .ecpg-outer { fill: none; stroke: var(--ecpg-ring); stroke-width: 2; }
+.ecpg-node .ecpg-ring { fill: none; stroke: var(--accent); stroke-width: 4; opacity: 0; }
+.ecpg-node text { font-size: 11px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; user-select: none; }
+.ecpg-node:hover .ecpg-body, .ecpg-node.ecpg-hl .ecpg-body { stroke-width: 3; }
+.ecpg-node:focus { outline: none; }
+.ecpg-node:focus-visible .ecpg-ring { opacity: .55; stroke-dasharray: 4 3; }
+.ecpg-node.ecpg-selected .ecpg-ring { opacity: 1; stroke-dasharray: none; }
+.ecpg-node.ecpg-pinned .ecpg-outer { stroke: var(--mark-3); stroke-dasharray: 2 2; }
+.ecpg-badge circle { fill: var(--surface); stroke: var(--mark-3); stroke-width: 1; }
+.ecpg-badge text { font-size: 11px; font-weight: 700; fill: var(--text); }
+
+/* relationships */
+.ecpg-rel { transition: opacity .15s; cursor: pointer; }
+.ecpg-rel .ecpg-line { fill: none; stroke: var(--mark-3); stroke-width: 1.5; }
+.ecpg-rel .ecpg-hit { fill: none; stroke: transparent; stroke-width: 12; }
+.ecpg-rel.ai .ecpg-line { stroke: var(--mark-2); stroke-dasharray: 6 4; }
+.ecpg-rel.invalid .ecpg-line { stroke: var(--chip-error-fg); stroke-dasharray: 2 3; stroke-width: 2; }
+.ecpg-rel.deprecated .ecpg-line { stroke-dasharray: 1 0; opacity: .6; }
+.ecpg-rel.ecpg-hl .ecpg-line { stroke-width: 2.5; }
+.ecpg-rel.ecpg-selected .ecpg-line { stroke: var(--accent); stroke-width: 3; }
+.ecpg-rlabel { font-size: 11px; font-weight: 600; fill: var(--muted); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; transition: opacity .15s; }
+/* edge labels on hover / selection only (label collisions); opt out with data-ecpg-edge-labels="always" */
+.ecpg:not(.ecpg-labels-always) .ecpg-rlabel { opacity: 0; }
+.ecpg:not(.ecpg-labels-always) .ecpg-rlabel:is(.ecpg-hl, .ecpg-selected) { opacity: 1; }
+.ecpg-rlabel.ecpg-selected { fill: var(--text); font-weight: 700; }
+.ecpg-dim { opacity: .15; }
+
+/* filter: one button top-left that expands into a floating window (ecpg-filter-redesign) */
+.ecpg-filter { --ecpg-fp-bg: var(--surface); position: absolute; top: 10px; left: 10px; z-index: 4; display: flex; flex-direction: column; max-width: calc(100% - 72px); max-height: calc(100% - 20px); }
+.ecpg.compact .ecpg-filter { top: 8px; left: 8px; max-width: calc(100% - 60px); max-height: calc(100% - 16px); }
+.ecpg-fbtn { font: inherit; font-size: var(--fs-sm); font-weight: 600; line-height: 1; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; flex: none; height: 32px; padding: 0 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-control); cursor: pointer; }
+.ecpg.compact .ecpg-fbtn { height: 28px; padding: 0 8px; }
+.ecpg-fbtn:hover { background: var(--surface-2); }
+.ecpg-fbtn svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ecpg-fbtn-n { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--text); color: var(--surface); font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; font-variant-numeric: tabular-nums; }  /* 14.54 / 14.18 */
+.ecpg-fbtn-n[hidden] { display: none; }
+.ecpg-filter.is-open { width: 360px; background: var(--ecpg-fp-bg); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--elev-2); }
+.ecpg.compact .ecpg-filter.is-open { width: 320px; }
+.ecpg-filter.is-open > .ecpg-fbtn { align-self: stretch; border: 0; border-bottom: 1px solid var(--border); border-radius: 8px 8px 0 0; background: var(--ecpg-fp-bg); }
+.ecpg-fp { flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 14px; font-size: var(--fs-sm); color: var(--text); scrollbar-width: thin; }
+.ecpg-fp::-webkit-scrollbar-button { display: none; width: 0; height: 0; }  /* v2: no scrollbar stepper arrows */
+.ecpg-fp[hidden] { display: none; }
+.ecpg-fs-head { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; margin-bottom: 6px; }
+.ecpg-fs-head :is(h3, h4) { margin: 0; font-size: var(--fs-sm); font-weight: 700; }
+.ecpg-fs-n { color: var(--muted); font-variant-numeric: tabular-nums; }                  /* 4.83 / 6.82 */
+.ecpg-fs-head > .ecpg-link { margin-left: auto; }
+.ecpg-link { font: inherit; font-size: var(--fs-sm); font-weight: 600; padding: 2px 4px; border: 0; border-radius: 4px; background: none; color: var(--chip-info-fg); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }  /* 5.99 / 8.33 */
+.ecpg-link[hidden] { display: none; }
+.ecpg-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ecpg-tag { font: inherit; font-size: var(--fs-sm); font-weight: 600; line-height: 1; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 9px 0 6px; border: 1px solid transparent; border-radius: 999px; background: var(--chip-neutral-bg); color: var(--chip-neutral-fg); cursor: pointer; transition: none; }
+.ecpg-tag.rel .ecpg-tag-l { font-size: var(--fs-xs); letter-spacing: .02em; }
+.ecpg-tag-n { font-weight: 500; font-variant-numeric: tabular-nums; }
+.ecpg-hole { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--ecpg-tag-c); box-shadow: inset 0 0 0 1px var(--ecpg-tag-s); transition: none; }
+.ecpg-tag:hover { border-color: var(--ecpg-tag-s); }
+.ecpg-tag[aria-pressed="true"] { background: var(--ecpg-tag-c); color: var(--ecpg-tag-t); border-color: var(--ecpg-tag-s); }
+.ecpg-tag[aria-pressed="true"] .ecpg-hole { background: var(--ecpg-fp-bg); box-shadow: inset 0 0 0 1.5px var(--ecpg-tag-t); }  /* punched: hollow */
+.ecpg-tri-hint { margin: 0; color: var(--muted); }
+.ecpg-tris { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.ecpg-tri { font: inherit; font-size: var(--fs-sm); color: var(--text); text-align: left; width: 100%; display: flex; align-items: center; gap: 6px; min-height: 30px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px; min-width: 0; background: transparent; cursor: pointer; }
+.ecpg-tri:hover { background: var(--surface-2); }
+.ecpg-tri-eye { flex: none; width: 14px; height: 14px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ecpg-tri-s, .ecpg-tri-o { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ecpg-tri-r { flex: none; color: var(--muted); font-size: var(--fs-xs); font-weight: 700; }
+.ecpg-tri-r::before { content: "—"; margin-right: 3px; }
+.ecpg-tri-r::after { content: "→"; margin-left: 3px; }
+.ecpg-tri.is-off { border-style: dashed; }
+.ecpg-tri.is-off .ecpg-tri-s, .ecpg-tri.is-off .ecpg-tri-o, .ecpg-tri.is-off .ecpg-tri-r { color: var(--muted); font-weight: 500; text-decoration: line-through; }  /* 4.83 / 6.82 */
+/* v2: linked hint = orange-red TEXT on a rest (unselected) tag; selected tags are filled, never hinted */
+.ecpg-tag[aria-pressed="false"][data-ecpg-hint] .ecpg-tag-l, .ecpg-tag[aria-pressed="false"][data-ecpg-hint] .ecpg-tag-n { color: var(--ecpg-hint); font-weight: 700; }
+/* v2: tri-state "Chọn tất cả" */
+.ecpg-chk { font: inherit; font-size: var(--fs-sm); font-weight: 500; color: var(--text); margin-left: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 4px; border: 0; border-radius: 4px; background: none; cursor: pointer; }
+.ecpg.compact .ecpg-chk { min-height: 24px; }
+.ecpg-chk-box { flex: none; width: 14px; height: 14px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid var(--muted); background: var(--surface) center / 10px 10px no-repeat; }
+.ecpg-chk[aria-checked="true"] .ecpg-chk-box { background-color: var(--indicator); border-color: var(--indicator); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5.2 4 7.5 8.5 2.5' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.ecpg-chk[aria-checked="mixed"] .ecpg-chk-box { background-color: var(--indicator); border-color: var(--indicator); background-image: linear-gradient(#fff, #fff); background-size: 8px 2px; }
+.ecpg-chk[disabled] { opacity: .5; cursor: default; }
+.ecpg-lg + .ecpg-lg { margin-top: 8px; }
+.ecpg-lg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.ecpg-lg-t { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.ecpg-lg-sub { flex-basis: 100%; font-size: var(--fs-xs); color: var(--muted); }
+.ecpg-lg-sep { flex-basis: 100%; height: 0; margin: 2px 0; border: 0; border-top: 1px solid var(--border); }
+.ecpg-tool:focus-visible, .ecpg-fbtn:focus-visible, .ecpg-tag:focus-visible, .ecpg-link:focus-visible, .ecpg-chk:focus-visible, .ecpg-tri:focus-visible, .ecpg-insp button:focus-visible, .ecpg-legend-btn:focus-visible, .ecpg-lgd-item:focus-visible, .ecpg-lgd-reset:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* toolbar: bottom-right (ecpg-filter-redesign) */
+.ecpg-tools { position: absolute; bottom: 10px; right: 10px; display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px; z-index: 2; }
+.ecpg-tool { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 6px; background: transparent; color: var(--text); cursor: pointer; }
+.ecpg-tool:hover { background: var(--surface-2); }
+.ecpg-tool:active { background: var(--active-bg); }
+.ecpg-tool svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ecpg.compact .ecpg-tool { width: 28px; height: 28px; }
+.ecpg.compact .ecpg-tools { bottom: 8px; right: 8px; }
+
+
+/* built-in inspector (pages without a prop card) */
+.ecpg-insp { position: absolute; left: 10px; bottom: 10px; width: 280px; max-height: 60%; overflow: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: var(--fs-sm); z-index: 3; }
+.ecpg-insp[hidden] { display: none; }
+
+/* text alternative: relationship table (toolbar "Xem dạng danh sách"); sits under the toolbar/filter, over the canvas */
+.ecpg-list { position: absolute; inset: 0; z-index: 1; overflow: auto; background: var(--surface); padding: 48px 56px 16px 12px; }
+.ecpg.compact .ecpg-list { padding: 44px 48px 12px 8px; }
+.ecpg-list[hidden], .ecpg-legend[hidden] { display: none; }
+.ecpg-list table { width: 100%; }
+.ecpg-list-cap { caption-side: top; text-align: left; padding: 0 0 8px; font-size: var(--fs-sm); color: var(--muted); }
+.ecpg-list-type { font-size: var(--fs-xs); color: var(--muted); }
+.ecpg-list .ecpg-link { padding: 0; text-align: left; }
+.ecpg-tool[aria-pressed="true"] { background: var(--chip-info-bg); color: var(--chip-info-fg); }
+
+/* node-color legend: bottom-left, show/hide (kg-chat-legend). KG-scoped via data-ecpg-legend="1"; opposite side from the toolbar (right) so they never overlap, below the filter (z 4). */
+/* column-reverse keeps the toggle button (last in DOM) pinned bottom-left and grows the detail body UPWARD above it, so the toggle's computed position is identical collapsed vs expanded */
+.ecpg-legend { position: absolute; left: 10px; bottom: 10px; z-index: 3; display: flex; flex-direction: column-reverse; gap: 6px; max-width: calc(100% - 72px); }
+.ecpg.compact .ecpg-legend { left: 8px; bottom: 8px; }
+.ecpg-legend-btn { font: inherit; font-size: var(--fs-sm); font-weight: 600; line-height: 1; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; flex: none; height: 32px; padding: 0 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-control); cursor: pointer; }
+.ecpg.compact .ecpg-legend-btn { height: 28px; padding: 0 8px; }
+.ecpg-legend-btn:hover { background: var(--surface-2); }
+.ecpg-legend-btn svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ecpg-legend-body { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; max-height: 50%; overflow: auto; }
+.ecpg-legend-body[hidden] { display: none; }
+/* kg-legend-toggle: each row is a per-type visibility toggle button; still reads as the old legend item */
+.ecpg-lgd-item { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 140px; font: inherit; font-size: var(--fs-sm); color: var(--text); text-align: left; background: transparent; border: 0; padding: 3px 4px; border-radius: var(--r-control); cursor: pointer; }
+.ecpg-lgd-item:hover { background: var(--surface-2); }
+.ecpg-lgd-l { flex: 1 1 auto; min-width: 0; }
+.ecpg-lgd-sw { flex: none; width: 12px; height: 12px; border-radius: 3px; background: var(--ecpg-lgd-c); box-shadow: inset 0 0 0 1px var(--ecpg-lgd-s); }
+/* hidden state: hollow swatch (outline only) + line-through label (kept at --muted, >=4.5:1 both themes) + eye-off icon */
+.ecpg-lgd-item[aria-pressed="true"] .ecpg-lgd-sw { background: transparent; }
+.ecpg-lgd-item[aria-pressed="true"] .ecpg-lgd-l { text-decoration: line-through; color: var(--muted); }  /* 4.83 / 6.82 */
+.ecpg-lgd-eye { display: none; flex: none; width: 12px; height: 12px; margin-left: auto; }
+.ecpg-lgd-eye svg { width: 12px; height: 12px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ecpg-lgd-item[aria-pressed="true"] .ecpg-lgd-eye { display: inline-flex; }
+/* reset link (mirrors .ecpg-link): clears all legend-hidden types */
+.ecpg-lgd-reset { font: inherit; font-size: var(--fs-sm); font-weight: 600; align-self: flex-start; padding: 2px 4px; border: 0; border-radius: 4px; background: none; color: var(--chip-info-fg); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }  /* 5.99 / 8.33 */
+.ecpg-lgd-reset[hidden] { display: none; }
+.ecpg-chip { display: inline-block; font-size: var(--fs-xs); font-weight: 600; border-radius: 999px; padding: 2px 8px; color: var(--ecpg-caption); }
+.ecpg-chip.rel { border-radius: 4px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); text-transform: uppercase; }
+.ecpg-ins-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.ecpg-ins-id { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--muted); }
+.ecpg-kv dd { min-width: 0; overflow-wrap: anywhere; }
+/* selected-properties running log (KG append path): entries stack flat, separated by a hairline — no card, consistent with the flat chat */
+.ecpg-ins-log { display: flex; flex-direction: column; gap: 12px; }
+.ecpg-ins-entry { padding: 8px 12px; }
+.ecpg-ins-entry + .ecpg-ins-entry { border-top: 1px solid var(--border); }
+/* chatbot-style lead-in for each inspected element in the KG chat log (flat; --text on --surface >=4.5:1) */
+.ecpg-ins-msg { margin: 0 0 6px; font-size: var(--fs-body); color: var(--text); }
+.ecpg-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: var(--fs-body); }
+.ecpg-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* page fits */
+.cfg-graph .graph-legend { top: auto; bottom: 12px; left: 304px; right: 64px; flex-wrap: wrap; }
+.evidence-panel .graph-canvas { position: relative; }
+.evidence-panel .graph-canvas[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ecpg-node, .ecpg-rel, .ecpg-rlabel { transition: none; }
+}

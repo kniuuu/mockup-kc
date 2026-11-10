@@ -1,0 +1,41 @@
+/* Change request detail (quality-change-request.html), as micro-frontend/web/src/features/changes/components/changes.css.
+   Steps reuse .jsteps/.jstep (screens.css); the rest is local to .ch-page. */
+.app-main.ch-main { padding: 0; }
+.ch-page { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-5) var(--sp-6); }
+.ch-card { padding: var(--sp-4); }
+.ch-head h1 { font-size: var(--fs-h1); margin: 0 0 var(--sp-2); }
+.ch-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); }
+.ch-split { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--sp-4); align-items: start; }
+@media (max-width: 1100px) { .ch-split { grid-template-columns: minmax(0, 1fr); } }
+
+.ch-page .tabs { display: flex; gap: var(--sp-1); overflow-x: auto; border-bottom: 1px solid var(--border); margin-bottom: var(--sp-3); }
+.ch-page .tabs > [role='tab'] { position: relative; padding: var(--sp-2_5) var(--sp-3); border: 0; background: transparent; font-size: var(--fs-body); font-weight: 600; color: var(--muted); white-space: nowrap; cursor: pointer; }
+.ch-page .tabs > [role='tab']::after { content: ''; position: absolute; left: var(--sp-2); right: var(--sp-2); bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: transparent; }
+.ch-page .tabs > [role='tab']:hover, .ch-page .tabs > [role='tab'][aria-selected='true'] { color: var(--text); }
+.ch-page .tabs > [role='tab'][aria-selected='true']::after { background: var(--indicator); }
+.ch-table { width: 100%; }
+.ch-table td { vertical-align: top; }
+.ch-empty { padding: var(--sp-6); text-align: center; color: var(--muted); }
+.ch-sub { font-size: var(--fs-sm); font-weight: 700; margin: var(--sp-3) 0 var(--sp-1_5); }
+.ch-fields { margin: 0; font-size: var(--fs-sm); }
+.ch-fields > div { display: flex; gap: var(--sp-1_5); }
+.ch-fields dt { color: var(--muted); }
+.ch-fields dd { margin: 0; }
+
+.ch-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.ch-tile { padding: var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-sm); }
+.ch-tile-n { font-size: var(--fs-kpi); font-weight: 700; }
+
+.ch-progress { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-3) 0; }
+.ch-progress progress { flex: 1; }
+.ch-log { max-height: 200px; overflow: auto; padding: var(--sp-2); background: var(--surface-2); border-radius: var(--r-sm); font-family: var(--font-mono); font-size: var(--fs-xs); white-space: pre-wrap; }
+
+.ch-history { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2_5); }
+.ch-history li { padding-left: var(--sp-3); border-left: 3px solid var(--border); }
+
+.ch-side-h { font-size: var(--fs-h3); margin: 0 0 var(--sp-1); }
+.ch-reviewers { list-style: none; margin: 0 0 var(--sp-1_5); padding: 0; display: flex; flex-direction: column; gap: var(--sp-1_5); }
+.ch-reviewers li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-1_5); }
+.ch-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-3) 0 var(--sp-2); }
+.ch-reject { display: flex; flex-direction: column; gap: var(--sp-1_5); }
+.ch-page [hidden] { display: none; }
