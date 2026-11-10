@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="pu.pageTitle">Quyền truy cập PII · MSB Context Platform</title>
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/screens.css">
+<script src="assets/i18n.js"></script><script src="assets/screens.js"></script>
+<link rel="stylesheet" href="assets/command-center.css">
+<style>
+/* PII access (micro-frontend/web features/settings pii-access-section.tsx, pii-grant-dialog.tsx; settings.css .set-pii-*) */
+.set-pii-h { margin: 0; font-size: var(--fs-body); }
+.set-pii-body { padding: var(--sp-4); }
+.set-pii-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.set-pii-sub td { background: var(--surface-2); }
+.set-pii-empty { padding: var(--sp-6); text-align: center; color: var(--muted); }
+.set-pii-locked { opacity: .6; }
+.set-pii-lock { width: 1em; height: 1em; margin-left: var(--sp-1); vertical-align: middle; }
+.set-pii-form { display: flex; flex-direction: column; gap: var(--sp-3); }
+.set-pii-form .field { margin-bottom: 0; }
+.set-pii-fs { border: 0; padding: 0; margin: 0; }
+.set-pii-fs legend { padding: 0; margin-bottom: var(--sp-2); }
+.set-pii-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-1_5) var(--sp-3); margin-top: var(--sp-1_5); }
+.set-pii-fs .row { display: inline-flex; align-items: center; gap: var(--sp-1); }
+.set-pii-unpick { border: 0; background: none; cursor: pointer; padding: 0 var(--sp-0_5); margin-left: var(--sp-1); color: inherit; font: inherit; }
+.set-page .mt-16 { margin-top: var(--sp-4); }
+.set-pii-dlg .q-dlg-body { padding: var(--sp-4) var(--sp-6); }
+.set-page > [hidden], .set-pii-form [hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+<header class="app-header"><div class="hdr-brand"><img class="logo logo-light" src="assets/msb_logo_black.svg" alt="MSB" height="20"><img class="logo logo-dark" src="assets/msb_logo_white.svg" alt="MSB" height="20"><img class="logo-symbol" src="assets/msb_symbol.svg" alt="MSB" width="40" height="23"><span class="brand-text">Context<br>Platform</span><button class="sb-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Thu gọn sidebar"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button></div><div class="hdr-main"><nav class="breadcrumb" aria-label="Breadcrumb" id="set-crumbs"><a href="settings.html?s=user" data-set-nav="user" data-i18n="set.title">Cài đặt người dùng</a><span class="sep" aria-hidden="true">›</span><a href="settings.html?s=users" data-set-nav="users" data-i18n="set.grp.users">Quản trị người dùng</a><span class="sep" aria-hidden="true">›</span><span class="crumb-current" aria-current="page" data-i18n="set.nav.pii">Quyền truy cập PII</span></nav><div class="user-menu"><button data-i18n-attr="aria-label:common.accountNguyenLanRoleOwner" class="user-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="user-pop" aria-label="Tài khoản Nguyễn Lan, vai trò Owner"><span class="avatar" aria-hidden="true">NL</span><span class="role" aria-hidden="true">Owner ▾</span></button></div></div></header>
+<aside class="sidebar" id="sidebar"><nav data-i18n-attr="aria-label:set.title" class="sidebar-nav" aria-label="Cài đặt người dùng"><div id="sb"><div class="nav-section"><div data-i18n="set.grp.account" class="nav-label">Tài khoản</div><ul><li><a class="nav-item" href="settings.html?s=user" data-set-nav="user" title="Người dùng" aria-label="Người dùng" data-i18n-attr="title:set.nav.user;aria-label:set.nav.user"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="nav-text" data-i18n="set.nav.user">Người dùng</span></a></li><li><a class="nav-item" href="settings.html?s=access" data-set-nav="access" title="Quyền truy cập" aria-label="Quyền truy cập" data-i18n-attr="title:set.nav.access;aria-label:set.nav.access"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="nav-text" data-i18n="set.nav.access">Quyền truy cập</span></a></li></ul></div><div class="nav-section"><div data-i18n="set.grp.prefs" class="nav-label">Tùy chọn</div><ul><li><a class="nav-item" href="settings.html?s=general" data-set-nav="general" title="Tùy chọn hiển thị" aria-label="Tùy chọn hiển thị" data-i18n-attr="title:set.nav.general;aria-label:set.nav.general"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span class="nav-text" data-i18n="set.nav.general">Tùy chọn hiển thị</span></a></li><li><a class="nav-item" href="settings.html?s=notif" data-set-nav="notif" title="Thông báo" aria-label="Thông báo" data-i18n-attr="title:set.nav.notif;aria-label:set.nav.notif"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg><span class="nav-text" data-i18n="set.nav.notif">Thông báo</span></a></li></ul></div><div class="nav-section" data-roles="admin owner"><div data-i18n="set.grp.users" class="nav-label">Quản trị người dùng</div><ul><li><a class="nav-item" href="settings.html?s=users" data-set-nav="users" title="Người dùng &amp; phân quyền" aria-label="Người dùng &amp; phân quyền" data-i18n-attr="title:set.w.nav.users;aria-label:set.w.nav.users"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M21 20a6 6 0 0 0-4-5.7"/></svg><span class="nav-text" data-i18n="set.w.nav.users">Người dùng &amp; phân quyền</span></a></li><li><a class="nav-item active" href="settings-users-pii.html" data-set-nav="pii" title="Quyền truy cập PII" aria-label="Quyền truy cập PII" data-i18n-attr="title:set.nav.pii;aria-label:set.nav.pii" aria-current="page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><rect x="9" y="11" width="6" height="4.5" rx="1"/><path d="M10.5 11V9.8a1.5 1.5 0 0 1 3 0V11"/></svg><span class="nav-text" data-i18n="set.nav.pii">Quyền truy cập PII</span></a></li><li data-roles="admin"><a class="nav-item" href="settings.html?s=audit" data-set-nav="audit" title="Nhật ký truy cập" aria-label="Nhật ký truy cập" data-i18n-attr="title:set.nav.audit;aria-label:set.nav.audit"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg><span class="nav-text" data-i18n="set.nav.audit">Nhật ký truy cập</span></a></li></ul></div><div class="nav-section" data-roles="admin"><div data-i18n="set.grp.system" class="nav-label">Hệ thống</div><ul><li><a class="nav-item" href="settings.html?s=providers" data-set-nav="providers" title="Nhà cung cấp" aria-label="Nhà cung cấp" data-i18n-attr="title:set.nav.providers;aria-label:set.nav.providers"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"/></svg><span class="nav-text" data-i18n="set.nav.providers">Nhà cung cấp</span></a></li><li><a class="nav-item" href="settings.html?s=models" data-set-nav="models" title="Mô hình" aria-label="Mô hình" data-i18n-attr="title:set.nav.models;aria-label:set.nav.models"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></svg><span class="nav-text" data-i18n="set.nav.models">Mô hình</span></a></li><li><a class="nav-item" href="settings.html?s=extractor" data-set-nav="extractor" title="Trích xuất" aria-label="Trích xuất" data-i18n-attr="title:set.w.nav.extractor;aria-label:set.w.nav.extractor"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h6"/><circle cx="18" cy="16" r="3"/><path d="M20.2 18.2 22 20"/></svg><span class="nav-text" data-i18n="set.w.nav.extractor">Trích xuất</span></a></li><li><a class="nav-item" href="settings.html?s=storage" data-set-nav="storage" title="Lưu trữ" aria-label="Lưu trữ" data-i18n-attr="title:set.nav.storage;aria-label:set.nav.storage"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span class="nav-text" data-i18n="set.nav.storage">Lưu trữ</span></a></li><li><a class="nav-item" href="settings.html?s=advertise" data-set-nav="advertise" title="Ảnh giới thiệu" aria-label="Ảnh giới thiệu" data-i18n-attr="title:set.w.nav.advertise;aria-label:set.w.nav.advertise"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 8"/></svg><span class="nav-text" data-i18n="set.w.nav.advertise">Ảnh giới thiệu</span></a></li></ul></div></div></nav></aside>
+<main class="app-main cfg-main set-main" id="main" tabindex="-1"><div class="set-page">
+<h1 class="sr-only" data-i18n="set.nav.pii">Quyền truy cập PII</h1>
+<!-- Steward / Consumer: no card, only the "no permission" state (settings-screen.tsx → PiiAccessSection userRole="steward") -->
+<div class="empty set-state" role="status" id="pu-denied" hidden><div class="empty-title" data-i18n="pu.deniedTitle">Bạn không có quyền quản lý quyền truy cập PII</div><p class="empty-body" data-i18n="pu.deniedBody">Chỉ Admin và Owner của tri thức được cấp hoặc thu hồi.</p></div>
+<section class="card" aria-labelledby="set-pii-h" id="pu-card" hidden>
+<div class="art-head"><h2 class="bold set-pii-h" id="set-pii-h" data-i18n="pu.title">Người dùng và nhóm có quyền xem giá trị thật của PII</h2><button class="btn btn-sm btn-primary" type="button" id="pu-add" data-i18n="pu.add">Cấp quyền</button></div>
+<div class="set-pii-body">
+<div class="banner banner-info" role="status"><span class="icon" aria-hidden="true">i</span><span id="pu-banner"></span></div>
+<div class="set-toolbar" role="search"><input class="input" id="pu-q" type="search" placeholder="Tìm người dùng hoặc nhóm…" aria-label="Tìm người dùng hoặc nhóm…" data-i18n-attr="placeholder:pu.search;aria-label:pu.search"><select class="select" id="pu-kb" aria-label="Tri thức" data-i18n-attr="aria-label:pu.kbFilter"><option value="*" data-i18n="pu.allKb">Tất cả tri thức</option></select></div>
+<div class="table-wrap"><table class="table"><caption class="sr-only" data-i18n="pu.caption">Người dùng có quyền truy cập PII</caption><thead><tr><th scope="col" data-i18n="pu.colWho">Người dùng / nhóm</th><th scope="col" data-i18n="pu.colCount">Số tri thức</th><th scope="col" data-i18n="pu.colKb">Tri thức</th><th scope="col"><span class="sr-only" data-i18n="pu.colOpen">Mở</span></th></tr></thead><tbody id="pu-rows"></tbody></table></div>
+<p class="set-hint mt-16" data-i18n="pu.note">Người không có trong danh sách chỉ thấy nhãn (Tên người 1, Địa chỉ 1…). Cấp quyền có hiệu lực ngay, không cần xin hay duyệt, và được ghi audit. Admin cấp và sửa cho mọi tri thức; Owner chỉ cấp và sửa cho tri thức do mình sở hữu, phần còn lại chỉ xem.</p>
+</div>
+</section>
+<!-- Grant / edit dialog (lg dialog: head with title + ×, body, footer) -->
+<dialog class="q-dlg is-md set-pii-dlg" id="pu-modal" aria-labelledby="pu-title">
+<div class="q-dlg-head"><h2 class="modal-title" id="pu-title"></h2><button class="icon-btn" type="button" id="pu-x" aria-label="Đóng" data-i18n-attr="aria-label:common.close"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+<div class="q-dlg-body set-pii-form">
+<div class="field" id="pu-who-f"><label class="bold text-sm" for="pu-who" data-i18n="pu.who">Người dùng hoặc nhóm</label><input class="input" id="pu-who" type="search" list="pu-people" autocomplete="off" placeholder="Tìm theo tên hoặc email, Enter để thêm nhiều người…" data-i18n-attr="placeholder:pu.whoPlaceholder"><datalist id="pu-people"></datalist><p class="field-err" id="pu-who-err" hidden></p></div>
+<div id="pu-pick-wrap"><div class="set-pii-chips" id="pu-picked" aria-live="polite"></div><p class="set-hint" data-i18n="pu.whoNote">Có thể chọn nhiều người hoặc nhóm cùng lúc; quyền áp dụng cho tất cả.</p></div>
+<fieldset class="field set-pii-fs"><legend class="field-label bold" data-i18n="pu.kbLegend">Tri thức</legend><div class="set-pii-grid" id="pu-kbs"></div><p class="set-hint" id="pu-kbs-note" data-i18n="pu.kbLockedNote" hidden>Tri thức có khóa không do bạn sở hữu nên không chọn được.</p><p class="field-err" id="pu-kb-err" hidden></p></fieldset>
+<fieldset class="field set-pii-fs"><legend class="field-label bold" data-i18n="pu.typesLegend">Loại PII được xem giá trị thật</legend><label class="row"><input type="checkbox" id="pu-all"> <span data-i18n="pu.allTypes">Tất cả loại</span></label><div class="set-pii-grid" id="pu-types"></div><p class="field-err" id="pu-types-err" hidden></p></fieldset>
+<div class="field"><label class="bold text-sm" for="pu-exp" data-i18n="pu.expires">Hết hạn (tuỳ chọn)</label><input class="input" id="pu-exp" type="date"></div>
+<div class="banner banner-info" role="note"><span class="icon" aria-hidden="true">i</span><span data-i18n="pu.immediate">Có hiệu lực ngay sau khi lưu. Không cần duyệt. Người được cấp bấm "Reveal" khi đọc tài liệu và mỗi lần xem đều ghi nhật ký.</span></div>
+</div>
+<div class="q-dlg-foot"><button class="btn btn-ghost" type="button" id="pu-cancel" data-i18n="pu.cancel">Hủy</button><button class="btn btn-primary" type="button" id="pu-save" data-i18n="pu.save">Lưu</button></div>
+</dialog>
+<!-- Revoke confirm (shared confirm dialog, danger) -->
+<dialog class="q-dialog" id="pu-confirm" aria-labelledby="pu-c-t"><h2 id="pu-c-t" data-i18n="pu.revoke">Thu hồi</h2><p class="qd-body" id="pu-c-body"></p><div class="qd-foot"><button class="btn btn-secondary" type="button" value="cancel" id="pu-c-no" data-i18n="q.dlgCancel">Hủy</button><button class="btn btn-danger" type="button" id="pu-c-ok" data-i18n="pu.revoke">Thu hồi</button></div></dialog>
+<div class="toast" id="pu-toast" role="status" hidden></div>
+</div>
+<script>
+// Ports micro-frontend/web features/settings pii-access-section.tsx + pii-grant-dialog.tsx with mock data.
+// Role = the shell's mock role (user menu › Vai trò, ?role=): Admin manages every knowledge base, Owner only the
+// ones they own; Steward / Consumer get the "no permission" state.
+(function () {
+  var I = window.ECP_I18N, root = document.documentElement;
+  var P = function (k, a) { return I.tr('pu.' + k, I.dict.vi['pu.' + k], a); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var day = function (iso) { return I.fmtDate(iso, { dateStyle: 'short' }); };
+  var TYPES = ['name', 'phone', 'email', 'customer_code', 'national_id', 'passport', 'account_no', 'dob', 'address'];
+  var KBS = [{ id: 'kb-credit', name: 'Quy trình tín dụng doanh nghiệp' }, { id: 'kb-card', name: 'Chính sách thẻ' }, { id: 'kb-aml', name: 'Quy định AML' }];
+  // principals = the Users & groups listing (Settings › Người dùng & nhóm); unknown names cannot be picked
+  var PEOPLE = [['Trần Văn Minh', 'USER'], ['Nguyễn Thị Lan Anh', 'USER'], ['Đỗ Quang Huy', 'USER'], ['Vũ Thanh Hằng', 'USER'], ['Nhóm Thẩm định tín dụng', 'GROUP'], ['Nhóm Pháp chế', 'GROUP'],
+    ['Phạm Quốc Bảo', 'USER'], ['Lê Thu Hà', 'USER'], ['Nhóm Chăm sóc khách hàng', 'GROUP'], ['Hoàng Minh Đức', 'USER'], ['Nhóm Kiểm soát nội bộ', 'GROUP']];
+  var seq = 100;
+  var g = function (kb, types, by, at, exp) { return { id: 'g' + (++seq), kb: kb, types: types, by: by, at: at, exp: exp || null }; };
+  var users = [
+    { who: 'Phạm Quốc Bảo', kind: 'USER', grants: [g('kb-credit', ['name', 'phone', 'email'], 'Nguyễn Lan', '2026-10-28T09:00:00+07:00', '2026-12-31'), g('kb-card', ['name'], 'Hoàng Minh Đức', '2026-10-03T09:00:00+07:00')] },
+    { who: 'Lê Thu Hà', kind: 'USER', grants: [g('kb-credit', ['national_id', 'passport', 'account_no'], 'Admin hệ thống', '2026-10-15T09:00:00+07:00')] },
+    { who: 'Nhóm Chăm sóc khách hàng', kind: 'GROUP', grants: [g('kb-credit', ['name', 'phone'], 'Nguyễn Lan', '2026-10-02T09:00:00+07:00'), g('kb-card', ['name', 'phone'], 'Admin hệ thống', '2026-09-25T09:00:00+07:00')] },
+    { who: 'Hoàng Minh Đức', kind: 'USER', grants: [g('kb-card', TYPES.slice(), 'Admin hệ thống', '2026-09-20T09:00:00+07:00')] },
+    { who: 'Nhóm Kiểm soát nội bộ', kind: 'GROUP', grants: [g('kb-aml', TYPES.slice(), 'Admin hệ thống', '2026-09-11T09:00:00+07:00')] }];
+  var open = [], role = 'admin';
+  var $ = function (id) { return document.getElementById(id); };
+  var kbName = function (id) { return KBS.filter(function (k) { return k.id === id; })[0].name; };
+  // Owner: only "Quy trình tín dụng doanh nghiệp" is theirs (server canManage / KB allowedActions in the app)
+  var manageable = function (id) { return role === 'admin' || (role === 'owner' && id === 'kb-credit'); };
+  var typesText = function (ts) { return ts.length === TYPES.length ? P('allTypes') : ts.map(function (x) { return P('type.' + x); }).join(', '); };
+  var LOCK = '<svg class="ico set-pii-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  function toast(t) { var e = $('pu-toast'); e.textContent = t; e.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(function () { e.hidden = true; }, 3200); }
+
+  function render() {
+    var r = root.getAttribute('data-role') || 'owner';
+    role = r === 'admin' || r === 'owner' ? r : 'denied';
+    $('pu-denied').hidden = role !== 'denied';
+    $('pu-card').hidden = role === 'denied';
+    if (role === 'denied') return;
+    $('pu-banner').textContent = P(role === 'admin' ? 'bannerAdmin' : 'bannerOwner');
+    var sel = $('pu-kb'), cur = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    KBS.forEach(function (k) { sel.add(new Option(k.name, k.id)); });
+    sel.value = cur || '*';
+    var q = $('pu-q').value.trim().toLowerCase(), kb = sel.value, body = $('pu-rows'), html = '';
+    users.forEach(function (u, ui) {
+      var gs = u.grants.filter(function (x) { return kb === '*' || x.kb === kb; });
+      if (!gs.length || u.who.toLowerCase().indexOf(q) < 0) return;
+      var isOpen = open.indexOf(u.kind + ':' + u.who) >= 0, lbl = P(isOpen ? 'collapse' : 'expand');
+      html += '<tr><td><span class="bold">' + esc(u.who) + '</span><div class="muted text-xs">' + P(u.kind === 'GROUP' ? 'kindGroup' : 'kindUser') + '</div></td><td>' + I.fmtNum(gs.length) + '</td>' +
+        '<td><div class="set-pii-chips">' + gs.map(function (x) { return '<span class="chip ' + (manageable(x.kb) ? 'chip-success' : 'chip-neutral') + '">' + esc(kbName(x.kb)) + '</span>'; }).join('') + '</div></td>' +
+        '<td class="nowrap"><button class="btn btn-ghost btn-sm" type="button" data-open="' + ui + '" aria-expanded="' + isOpen + '" aria-label="' + esc(lbl + ' · ' + u.who) + '">' + lbl + '</button></td></tr>';
+      if (!isOpen) return;
+      html += '<tr class="set-pii-sub"><td colspan="4"><table class="table"><thead><tr><th scope="col">' + P('colKb') + '</th><th scope="col">' + P('colTypes') + '</th><th scope="col">' + P('colBy') + '</th><th scope="col"><span class="sr-only">' + P('colActions') + '</span></th></tr></thead><tbody>' +
+        gs.map(function (x) {
+          var can = manageable(x.kb), n = esc(kbName(x.kb));
+          return '<tr' + (can ? '' : ' class="set-pii-locked"') + '><td>' + n + (can ? '' : LOCK) + '</td>' +
+            '<td><span class="chip chip-success">' + esc(typesText(x.types)) + '</span>' + (x.exp ? '<div class="muted text-xs">' + P('until', { d: day(x.exp + 'T12:00:00') }) + '</div>' : '') + '</td>' +
+            '<td>' + esc(x.by) + '<div class="muted text-xs">' + day(x.at) + '</div></td><td class="nowrap">' +
+            (can ? '<button class="btn btn-ghost btn-sm" type="button" data-edit="' + ui + ':' + x.id + '" aria-label="' + P('edit') + ' · ' + n + '">' + P('edit') + '</button> <button class="btn btn-ghost btn-sm" type="button" data-revoke="' + ui + ':' + x.id + '" aria-label="' + P('revoke') + ' · ' + n + '">' + P('revoke') + '</button>'
+              : '<span class="muted text-xs" title="' + P('readOnlyTip') + '">' + P('readOnly') + '</span>') + '</td></tr>';
+        }).join('') + '</tbody></table></td></tr>';
+    });
+    body.innerHTML = html || '<tr><td colspan="4" class="set-pii-empty">' + P('empty') + '</td></tr>';
+  }
+  $('pu-q').addEventListener('input', render);
+  $('pu-kb').addEventListener('change', render);
+  document.addEventListener('ecp-rolechange', render);
+  I.onChange(function () { render(); if ($('pu-modal').open) drawDialog(); });
+
+  // ---- grant / edit dialog
+  var m = $('pu-modal'), editing = null, picked = [];
+  var match = function (name) { name = name.trim().toLowerCase(); return PEOPLE.filter(function (p) { return p[0].toLowerCase() === name; })[0]; };
+  function drawPicked() {
+    $('pu-picked').innerHTML = picked.map(function (p, i) { return '<span class="chip chip-neutral">' + esc(p[0]) + '<button class="set-pii-unpick" type="button" data-unpick="' + i + '" aria-label="' + esc(P('unpick', { name: p[0] })) + '">×</button></span>'; }).join('');
+  }
+  // typed or selected name -> chip; unknown names and duplicates are ignored (the text stays)
+  function addPick(name) {
+    var p = match(name);
+    if (p && picked.indexOf(p) < 0) { picked.push(p); drawPicked(); }
+    if (p || !name.trim()) $('pu-who').value = '';
+    return p;
+  }
+  function err(id, msg) { var e = $(id); e.textContent = msg || ''; e.hidden = !msg; }
+  function drawDialog() {
+    var gr = editing && editing.grant;
+    $('pu-title').textContent = P(gr ? 'dlgEdit' : 'dlgGrant');
+    $('pu-people').innerHTML = PEOPLE.map(function (p) { return '<option value="' + esc(p[0]) + '"></option>'; }).join('');
+    $('pu-types').innerHTML = TYPES.map(function (x) { return '<label class="row"><input type="checkbox" value="' + x + '"> ' + P('type.' + x) + '</label>'; }).join('');
+    $('pu-kbs').innerHTML = KBS.map(function (k) {
+      // editing one grant: its knowledge base only
+      var can = manageable(k.id) && (!gr || gr.kb === k.id);
+      return '<label class="row' + (manageable(k.id) ? '' : ' set-pii-locked') + '"><input type="checkbox" data-kb value="' + k.id + '"' + (can ? '' : ' disabled') + '> ' + esc(k.name) + '</label>';
+    }).join('');
+    $('pu-kbs-note').hidden = !KBS.some(function (k) { return !manageable(k.id); });
+  }
+  function openModal(ui, gid) {
+    var u = ui == null ? null : users[ui], gr = u ? u.grants.filter(function (x) { return x.id === gid; })[0] : null;
+    editing = u ? { user: u, grant: gr } : null; picked = [];
+    drawDialog(); drawPicked();
+    var who = $('pu-who'); who.value = u ? u.who : ''; who.disabled = !!u;
+    $('pu-pick-wrap').hidden = !!u;
+    // new grant: the first knowledge base the viewer manages is ticked
+    var first = KBS.filter(function (k) { return manageable(k.id); })[0];
+    m.querySelectorAll('[data-kb]').forEach(function (c) { c.checked = gr ? c.value === gr.kb : !!first && c.value === first.id; });
+    m.querySelectorAll('#pu-types input').forEach(function (c) { c.checked = !!gr && gr.types.indexOf(c.value) >= 0; });
+    $('pu-all').checked = !!gr && gr.types.length === TYPES.length;
+    $('pu-exp').value = gr && gr.exp ? gr.exp : '';
+    ['pu-who-err', 'pu-kb-err', 'pu-types-err'].forEach(function (id) { err(id); });
+    $('pu-who-f').classList.remove('has-error');
+    m.showModal();
+  }
+  var close = function () { m.close(); };
+  $('pu-add').addEventListener('click', function () { openModal(); });
+  $('pu-cancel').addEventListener('click', close);
+  $('pu-x').addEventListener('click', close);
+  $('pu-who').addEventListener('input', function (e) { if (!editing && match(e.target.value)) addPick(e.target.value); });   // picking from the datalist fills the exact name
+  $('pu-who').addEventListener('keydown', function (e) { if (editing || (e.key !== 'Enter' && e.key !== ',')) return; e.preventDefault(); addPick(e.target.value.replace(/,$/, '')); });
+  $('pu-picked').addEventListener('click', function (e) { var b = e.target.closest('[data-unpick]'); if (b) { picked.splice(+b.getAttribute('data-unpick'), 1); drawPicked(); } });
+  $('pu-all').addEventListener('change', function (e) { m.querySelectorAll('#pu-types input').forEach(function (c) { c.checked = e.target.checked; }); });
+  $('pu-types').addEventListener('change', function () { var cs = m.querySelectorAll('#pu-types input'); $('pu-all').checked = [].every.call(cs, function (c) { return c.checked; }); });
+  $('pu-save').addEventListener('click', function () {
+    var kbs = [].filter.call(m.querySelectorAll('[data-kb]'), function (c) { return c.checked; }).map(function (c) { return c.value; });
+    var types = [].filter.call(m.querySelectorAll('#pu-types input'), function (c) { return c.checked; }).map(function (c) { return c.value; });
+    var pending = match($('pu-who').value);
+    var eWho = editing || picked.length || pending ? '' : P('whoError');
+    err('pu-who-err', eWho); $('pu-who-f').classList.toggle('has-error', !!eWho);
+    err('pu-kb-err', kbs.length ? '' : P('kbError'));
+    err('pu-types-err', types.length ? '' : P('typesError'));
+    if (eWho || !kbs.length || !types.length) return;
+    var exp = $('pu-exp').value || null;
+    if (editing) { editing.grant.types = types; editing.grant.exp = exp; close(); render(); toast(P('toastSaved')); return; }
+    var everyone = picked.slice(); if (pending && everyone.indexOf(pending) < 0) everyone.push(pending);
+    everyone.forEach(function (p) {
+      var u = users.filter(function (x) { return x.who === p[0]; })[0];
+      if (!u) { u = { who: p[0], kind: p[1], grants: [] }; users.unshift(u); }
+      kbs.forEach(function (k) { u.grants.unshift(g(k, types.slice(), 'Nguyễn Lan', new Date().toISOString(), exp)); });
+      if (open.indexOf(u.kind + ':' + u.who) < 0) open.push(u.kind + ':' + u.who);
+    });
+    close(); render(); toast(P('toastGranted', { n: I.fmtNum(everyone.length) }));
+  });
+
+  // ---- rows: expand, edit, revoke (confirm, danger)
+  var cf = $('pu-confirm'), revoking = null;
+  $('pu-c-no').addEventListener('click', function () { cf.close(); });
+  $('pu-c-ok').addEventListener('click', function () {
+    var u = revoking.user; u.grants = u.grants.filter(function (x) { return x !== revoking.grant; });
+    if (!u.grants.length) users.splice(users.indexOf(u), 1);
+    cf.close(); render(); toast(P('toastRevoked'));
+  });
+  $('pu-rows').addEventListener('click', function (e) {
+    var o = e.target.closest('[data-open]'), ed = e.target.closest('[data-edit]'), rv = e.target.closest('[data-revoke]');
+    if (o) { var u = users[+o.getAttribute('data-open')], key = u.kind + ':' + u.who, i = open.indexOf(key); if (i >= 0) open.splice(i, 1); else open.push(key); render(); }
+    if (ed) { var a = ed.getAttribute('data-edit').split(':'); openModal(+a[0], a[1]); }
+    if (rv) {
+      var b = rv.getAttribute('data-revoke').split(':'), ru = users[+b[0]];
+      revoking = { user: ru, grant: ru.grants.filter(function (x) { return x.id === b[1]; })[0] };
+      $('pu-c-body').textContent = P('revokeBody', { p: ru.who, kb: kbName(revoking.grant.kb) });
+      cf.showModal();
+    }
+  });
+
+  // deep links: ?state=grant opens the dialog, ?state=open expands the first row
+  var Q = new URLSearchParams(location.search);
+  document.addEventListener('DOMContentLoaded', function () {
+    if (Q.get('state') === 'open') open.push(users[0].kind + ':' + users[0].who);
+    render();
+    if (Q.get('state') === 'grant' && role !== 'denied') openModal();
+  });
+})();
+</script>
+</main>
+</div>
+</body>
+</html>

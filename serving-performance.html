@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serving Performance · Quan sát &amp; Phân tích · MSB Context Platform</title>
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/screens.css">
+<script src="assets/i18n.js"></script><script src="assets/screens.js"></script><script src="assets/obs-dash.js"></script>
+<link rel="stylesheet" href="assets/command-center.css">
+</head>
+<body class="obs-flat kpi-native-title">
+<div class="app">
+<header class="app-header"><div class="hdr-brand"><img class="logo logo-light" src="assets/msb_logo_black.svg" alt="MSB" height="20"><img class="logo logo-dark" src="assets/msb_logo_white.svg" alt="MSB" height="20"><img class="logo-symbol" src="assets/msb_symbol.svg" alt="MSB" width="40" height="23"><span class="brand-text">Context<br>Platform</span><button class="sb-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Thu gọn sidebar"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button></div><div class="hdr-main"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="quality-overview.html" data-i18n="common.observationAnalytics">Quan sát &amp; Phân tích</a><span class="sep" aria-hidden="true">›</span><span class="crumb-current" aria-current="page">Serving Performance</span></nav><div class="user-menu"><button data-i18n-attr="aria-label:common.accountNguyenLanRoleOwner" class="user-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="user-pop" aria-label="Tài khoản Nguyễn Lan, vai trò Owner"><span class="avatar" aria-hidden="true">NL</span><span class="role" aria-hidden="true">Owner ▾</span></button></div></div></header>
+<aside class="sidebar" id="sidebar"><nav data-i18n-attr="aria-label:common.mainNavigation" class="sidebar-nav" aria-label="Điều hướng chính"><div id="sb"><div class="nav-section"><div data-i18n="common.explore" class="nav-label">Khai thác</div><ul><li><a class="nav-item" href="enterprise-search-home.html" title="Enterprise Search" aria-label="Enterprise Search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="nav-text">Enterprise Search</span></a></li><li><a class="nav-item" href="knowledge-graph.html" title="Knowledge Graph" aria-label="Knowledge Graph"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8 7l8 1M7.5 8l2 8M16.5 10l-5 6"/></svg><span class="nav-text">Knowledge Graph</span></a></li></ul></div><div class="nav-section"><div class="nav-label">Enterprise Context</div><ul><li><a class="nav-item" href="ek-overview-list.html" title="Knowledge Overview" aria-label="Knowledge Overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg><span class="nav-text">Knowledge Overview</span></a></li><li><a class="nav-item" href="transformation-job.html" title="Transformation Job" aria-label="Transformation Job"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg><span class="nav-text">Transformation Job</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.knowledgeConfiguration" class="nav-label">Quản trị ngữ cảnh</div><ul><li><a class="nav-item" href="config-taxonomy.html" title="Taxonomy" aria-label="Taxonomy"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h6v6H5zM13 14h6v6h-6zM8 10v7h5"/></svg><span class="nav-text">Taxonomy Management</span></a></li><li><a class="nav-item" href="config-ontology.html" title="Ontology Studio" aria-label="Ontology Studio"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v5M12 12l-6 5M12 12l6 5"/></svg><span class="nav-text">Ontology Studio</span></a></li><li><a class="nav-item" href="config-templates.html" title="Package Templates" aria-label="Package Templates"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span class="nav-text">Package Templates</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.qualityImprovement" class="nav-label">Chất lượng &amp; Cải tiến</div><ul><li><a data-i18n-attr="title:common.changesApproval;aria-label:common.changesApproval" class="nav-item" href="changes-approval-v2.html" title="Thay đổi &amp; Phê duyệt" aria-label="Thay đổi &amp; Phê duyệt"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="8"/></svg><span data-i18n="common.changesApproval" class="nav-text">Thay đổi &amp; Phê duyệt</span></a></li><li><a class="nav-item" href="quality-eval-lab.html" title="Evaluation Lab" aria-label="Evaluation Lab"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg><span class="nav-text">Evaluation Lab</span></a></li><li><a class="nav-item" href="quality-gaps.html" title="Knowledge Gaps" aria-label="Knowledge Gaps"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4M12 16h.01"/></svg><span class="nav-text">Knowledge Gaps</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.observationAnalytics" class="nav-label">Quan sát &amp; Phân tích</div><ul><li><a class="nav-item" href="quality-overview.html" title="Quality Overview" aria-label="Quality Overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19l1-5.8L3.5 9.2l5.9-.9z"/></svg><span class="nav-text">Quality Overview</span></a></li><li><a class="nav-item" href="quality-feedback.html" title="Feedback" aria-label="Feedback"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="nav-text">Feedback</span></a></li><li><a class="nav-item" href="usage-retrieval.html" title="Usage &amp; Retrieval" aria-label="Usage &amp; Retrieval"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="nav-text">Usage &amp; Retrieval</span></a></li><li><a class="nav-item active" href="serving-performance.html" title="Serving Performance" aria-label="Serving Performance" aria-current="page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="nav-text">Serving Performance</span></a></li><li><a class="nav-item" href="knowledge-value.html" title="Knowledge Value" aria-label="Knowledge Value"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M17 7H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/></svg><span class="nav-text">Knowledge Value</span></a></li></ul></div></div></nav></aside>
+<main class="app-main q-dash-main an-main" id="main">
+<h1 class="sr-only">Serving Performance</h1>
+<div class="page-toolbar">
+  <div data-i18n-attr="aria-label:q.timeRange" class="segmented" role="group" aria-label="Khoảng thời gian" data-exclusive><button data-i18n="an.s.n24Hours" type="button" aria-pressed="false">24 giờ</button><button data-i18n="q.n7Days" type="button" aria-pressed="true">7 ngày</button><button data-i18n="q.n30Days" type="button" aria-pressed="false">30 ngày</button></div>
+  <label class="sr-only" for="sp-consumer">Consumer</label><select id="sp-consumer" class="input job-sel"><option data-i18n="an.s.allConsumers" value="">Tất cả consumer</option><option data-i18n-skip value="es">Enterprise Search (web)</option><option data-i18n-skip value="los">LOS – Trợ lý thẩm định</option><option data-i18n-skip value="cc">Contact Center Copilot</option><option data-i18n-skip value="mbank">mBank Virtual Assistant (API)</option><option data-i18n-skip value="crm">CRM KHDN (API)</option></select>
+  <label class="sr-only" for="sp-endpoint">Endpoint</label><select id="sp-endpoint" class="input job-sel"><option data-i18n="an.s.allEndpoints" value="">Tất cả endpoint</option><option value="answer">POST /v1/answer</option><option value="search">GET /v1/search</option><option value="retrieve">POST /v1/retrieve</option><option value="graph">POST /v1/graph/query</option><option value="artifact">GET /v1/artifacts/{id}</option></select>
+  <div data-i18n-attr="aria-label:an.s.compareGroup" class="segmented" role="group" aria-label="So sánh version pipeline" data-exclusive data-reveal="sp-compare"><button data-i18n="an.s.noCompare" type="button" aria-pressed="true">Không so sánh</button><button data-i18n="an.s.compareVersion" type="button" aria-pressed="false" aria-controls="sp-compare" data-reveal-on>So sánh version</button></div>
+  <div class="an-tb-end"><span data-i18n="an.fresh1" class="text-xs muted an-fresh">Cập nhật 10:45 · 14/06/2026 (ICT) · trễ 1 phút</span><button data-i18n="an.exportCsv" class="btn btn-secondary btn-sm" type="button" data-an-csv="serving-performance-2026-06-14.csv" data-an-csv-table="#sp-ep-table">Xuất CSV</button></div>
+</div>
+<section class="an-attn" aria-labelledby="sp-attn-h"><h2 data-i18n="an.attnTitle" class="overline" id="sp-attn-h">Cần chú ý</h2><ul><li><span data-i18n="an.s.nearThreshold" class="chip chip-warning">Gần ngưỡng</span><span data-i18n="an.s.attn1" class="an-attn-t">Latency p95 Ask 4,8 s, sát SLO 5 s. Đã vượt ngày 11/06 (5,6 s).</span></li><li><span data-i18n="an.s.errorSpike" class="chip chip-warning">Lỗi tăng</span><span data-i18n="an.s.attn2" class="an-attn-t">POST /v1/graph/query lỗi 0,92%, cao nhất trong các endpoint.</span><a data-i18n="an.s.viewByEndpoint" class="btn btn-sm btn-secondary" href="#sp-ep-h">Xem theo endpoint</a></li></ul></section>
+<div class="sum-cards">
+  <div data-i18n-attr="title:an.s.tipAvailability" class="card sum-card is-key" title="Định nghĩa: thời gian dịch vụ sẵn sàng (health check đạt) / tổng thời gian · Nguồn: health check gateway · Cửa sổ: 7 ngày"><div class="kpi-label">Availability</div><div class="kpi-value">99,94%</div><div class="an-slo-row"><span data-i18n="an.s.met" class="chip chip-success">Đạt</span><span data-i18n="an.s.targetAvailability">Mục tiêu tham khảo 99,9%</span></div><div data-i18n="an.s.errorBudgetLeft" class="kpi-delta">Error budget còn 41%</div></div>
+  <div data-i18n-attr="title:an.s.tipP95Ask" class="card sum-card is-key" title="Định nghĩa: p95 thời gian end-to-end của POST /v1/answer · Nguồn: trace serving · Cửa sổ: 7 ngày"><div class="kpi-label">Latency p95 Ask</div><div class="kpi-value">4,8 s</div><div class="an-slo-row"><span data-i18n="an.s.nearThreshold" class="chip chip-warning">Gần ngưỡng</span><span data-i18n="an.s.targetAsk">Mục tiêu tham khảo ≤ 5 s</span></div></div>
+  <div data-i18n-attr="title:an.s.tipP95Search" class="card sum-card" title="Định nghĩa: p95 thời gian phản hồi của GET /v1/search · Nguồn: trace serving · Cửa sổ: 7 ngày"><div class="kpi-label">Latency p95 Search</div><div class="kpi-value">620 ms</div><div class="an-slo-row"><span data-i18n="an.s.met" class="chip chip-success">Đạt</span><span data-i18n="an.s.targetSearch">Mục tiêu tham khảo ≤ 800&nbsp;ms</span></div></div>
+  <div data-i18n-attr="title:an.s.tipErrorRate" class="card sum-card" title="Định nghĩa: request lỗi (5xx, timeout, lỗi tool) / tổng request · Nguồn: log gateway · Cửa sổ: 7 ngày"><div data-i18n="an.s.errorRate" class="kpi-label">Tỉ lệ lỗi</div><div class="kpi-value">0,33%</div><div class="an-slo-row"><span data-i18n="an.s.met" class="chip chip-success">Đạt</span><span data-i18n="an.s.targetErrorRate">Mục tiêu tham khảo ≤ 1%</span></div><div data-i18n="an.s.kpiErrorsSub" class="kpi-delta">263 lỗi</div></div>
+  <div data-i18n-attr="title:an.s.tipThroughput" class="card sum-card" title="Định nghĩa: tổng request qua mọi endpoint · Nguồn: log gateway · Cửa sổ: 7 ngày"><div class="kpi-label">Throughput</div><div class="kpi-value">80.650 <span data-i18n="an.s.requestsUnit" class="text-sm">yêu cầu</span></div><div data-i18n="an.s.kpiThroughputSub" class="kpi-delta">TB 0,13 req/s · đỉnh 2,4 req/s lúc 09:00 10/06/2026</div></div>
+</div>
+<div class="q-dash">
+  <section class="card" aria-labelledby="sp-lat-h">
+    <div class="q-whead"><h2 class="card-title" id="sp-lat-h">Latency Ask end-to-end (p50 · p95 · p99)</h2></div>
+    <figure class="q-chart">
+      <div class="an-plot" aria-hidden="true">
+        <svg class="an-line" viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <line class="an-grid" x1="0" y1="0.5" x2="600" y2="0.5"/>
+          <line class="an-grid" x1="0" y1="159.5" x2="600" y2="159.5"/>
+          <line class="an-slo" x1="0" y1="80" x2="600" y2="80"/>
+          <polyline class="ch-1" points="0,128 100,126.4 200,128 300,118.4 400,126.4 500,126.4 600,126.4"/>
+          <polyline class="ch-4" points="0,86.4 100,84.8 200,88 300,70.4 400,81.6 500,84.8 600,83.2"/>
+          <polyline class="ch-5" points="0,41.6 100,38.4 200,44.8 300,3.2 400,32 500,36.8 600,33.6"/>
+        </svg>
+        <span class="an-ylab" style="top:0">10 s</span><span class="an-ylab" style="top:50%">5 s</span><span class="an-ylab" style="top:100%">0</span>
+        <span class="an-elab an-e1" style="top:79%">p50</span><span class="an-elab an-e2" style="top:52%">p95</span><span class="an-elab an-e3" style="top:21%">p99</span>
+      </div>
+      <div class="q-axis an-xaxis" aria-hidden="true"><span style="left:0%">08/06</span><span style="left:16.667%">09/06</span><span style="left:33.333%">10/06</span><span style="left:50%">11/06</span><span style="left:66.667%">12/06</span><span style="left:83.333%">13/06</span><span style="left:100%">14/06</span></div>
+      <div class="q-legend"><span><i class="ch-1" aria-hidden="true"></i>p50</span><span><i class="ch-4" aria-hidden="true"></i>p95</span><span><i class="ch-5" aria-hidden="true"></i>p99</span><span><i class="an-ks" aria-hidden="true"></i><span data-i18n="an.s.legendSlo">SLO tham khảo 5&nbsp;s</span></span></div>
+      <figcaption><b data-i18n="an.s.latencyCaptionTitle">Latency Ask theo mốc thời gian (thang 0–10 s; vạch đứt = SLO 5 s).</b></figcaption>
+      <details><summary data-i18n="q.viewDataTable">Xem bảng dữ liệu</summary>
+        <table class="table doc-table q-table" id="sp-lat-table"><caption data-i18n="an.s.latencyTableCaption" class="sr-only">Latency Ask p50, p95, p99 theo ngày (giây)</caption><thead><tr><th data-i18n="an.s.day" scope="col" class="an-ctr">Ngày</th><th scope="col" class="q-num">p50 (s)</th><th scope="col" class="q-num">p95 (s)</th><th scope="col" class="q-num">p99 (s)</th></tr></thead><tbody>
+          <tr><th scope="row" class="an-ctr">08/06</th><td class="q-num">2,0</td><td class="q-num">4,6</td><td class="q-num">7,4</td></tr>
+          <tr><th scope="row" class="an-ctr">09/06</th><td class="q-num">2,1</td><td class="q-num">4,7</td><td class="q-num">7,6</td></tr>
+          <tr><th scope="row" class="an-ctr">10/06</th><td class="q-num">2,0</td><td class="q-num">4,5</td><td class="q-num">7,2</td></tr>
+          <tr><th scope="row" class="an-ctr">11/06</th><td class="q-num">2,6</td><td class="q-num bold">5,6</td><td class="q-num">9,8</td></tr>
+          <tr><th scope="row" class="an-ctr">12/06</th><td class="q-num">2,1</td><td class="q-num">4,9</td><td class="q-num">8,0</td></tr>
+          <tr><th scope="row" class="an-ctr">13/06</th><td class="q-num">2,1</td><td class="q-num">4,7</td><td class="q-num">7,7</td></tr>
+          <tr><th scope="row" class="an-ctr">14/06</th><td class="q-num">2,1</td><td class="q-num">4,8</td><td class="q-num">7,9</td></tr>
+        </tbody></table>
+      </details>
+    </figure>
+  </section>
+  <section class="card" aria-labelledby="sp-stage-h">
+    <div class="q-whead"><h2 data-i18n="an.s.stageBreakdown" class="card-title" id="sp-stage-h">Thời gian theo bước xử lý câu trả lời</h2></div>
+    <div class="art-head"><div data-i18n-attr="aria-label:an.s.breakdownTabs" class="tabs" role="tablist" aria-label="Breakdown theo"><button data-i18n="an.s.byStep" role="tab" type="button" id="sp-t-step" aria-controls="sp-p-step" aria-selected="true">Theo bước</button><button data-i18n="an.s.byTool" role="tab" type="button" id="sp-t-tool" aria-controls="sp-p-tool" aria-selected="false">Theo tool</button></div></div>
+    <div role="tabpanel" id="sp-p-step" aria-labelledby="sp-t-step">
+      <figure class="q-chart">
+        <div class="an-sub">p95 Ask · 4.800 ms</div>
+        <div class="an-stack" aria-hidden="true"><span class="ch-3" style="width:3.75%" title="Pre-retrieval 180 ms"></span><span class="ch-1" style="width:13.33%" title="Retrieval 640 ms"></span><span class="ch-2" style="width:6.46%" title="Post-retrieval 310 ms"></span><span class="ch-5" style="width:1.88%" title="Augmentation 90 ms"></span><span class="ch-4" style="width:67.71%" title="Generation 3.250 ms"></span><span class="ch-6" style="width:6.87%" title="Post-generation 330 ms"></span></div>
+        <div class="q-legend"><span><i class="ch-3" aria-hidden="true"></i>Pre-retrieval (4%)</span><span><i class="ch-1" aria-hidden="true"></i>Retrieval (13%)</span><span><i class="ch-2" aria-hidden="true"></i>Post-retrieval (6%)</span><span><i class="ch-5" aria-hidden="true"></i>Augmentation (2%)</span><span><i class="ch-4" aria-hidden="true"></i>Generation (68%)</span><span><i class="ch-6" aria-hidden="true"></i>Post-generation (7%)</span></div>
+        <figcaption><b data-i18n="an.s.stageCaptionTitle">Đóng góp của từng bước vào p95 Ask.</b></figcaption>
+        <details><summary data-i18n="q.viewDataTable">Xem bảng dữ liệu</summary>
+          <table class="table doc-table q-table"><caption data-i18n="an.s.stageTableCaption" class="sr-only">p95 theo bước xử lý câu trả lời</caption><colgroup><col><col style="width:84px"><col style="width:84px"></colgroup><thead><tr><th data-i18n="an.s.step" scope="col">Bước</th><th scope="col" class="q-num">p95</th><th data-i18n="an.share" scope="col" class="q-num">Tỉ trọng</th></tr></thead><tbody>
+            <tr><th scope="row">Pre-retrieval</th><td class="q-num">180 ms</td><td class="q-num">4%</td></tr>
+            <tr><th scope="row">Retrieval</th><td class="q-num">640 ms</td><td class="q-num">13%</td></tr>
+            <tr><th scope="row">Post-retrieval</th><td class="q-num">310 ms</td><td class="q-num">6%</td></tr>
+            <tr><th scope="row">Augmentation</th><td class="q-num">90 ms</td><td class="q-num">2%</td></tr>
+            <tr><th scope="row">Generation</th><td class="q-num">3.250 ms</td><td class="q-num">68%</td></tr>
+            <tr><th scope="row">Post-generation</th><td class="q-num">330 ms</td><td class="q-num">7%</td></tr>
+            <tr><th data-i18n="q.total" scope="row">Tổng</th><td class="q-num bold">4.800 ms</td><td class="q-num bold">100%</td></tr>
+          </tbody></table>
+        </details>
+      </figure>
+      <dl class="kv an-kv mt-12"><dt data-i18n="an.s.tokensPerAnswer">Token vào / ra TB mỗi câu trả lời</dt><dd>3.420 / 410</dd><dt data-i18n="an.s.agentLoops">Số vòng lặp agent TB</dt><dd>1,6 (P95 3)</dd><dt>Model</dt><dd>Llama-3.1-70B · prompt v8</dd></dl>
+    </div>
+    <div role="tabpanel" id="sp-p-tool" aria-labelledby="sp-t-tool" hidden>
+      <table class="table doc-table q-table"><caption data-i18n="an.s.toolTableCaption" class="sr-only">Gọi tool theo câu trả lời, 7 ngày</caption><colgroup><col><col style="width:104px"><col style="width:68px"><col style="width:64px"></colgroup>
+        <thead><tr><th scope="col">Tool</th><th data-i18n="an.s.callsPerAnswer" scope="col" class="q-num">Lần gọi/câu</th><th scope="col" class="q-num">p95</th><th data-i18n="common.errors" scope="col" class="q-num">Lỗi</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span class="mono">vector_search</span></th><td class="q-num">1,9</td><td class="q-num">420 ms</td><td class="q-num">0,2%</td></tr>
+          <tr><th scope="row"><span class="mono">graph_query</span></th><td class="q-num">0,6</td><td class="q-num">1,2 s</td><td class="q-num">0,9%</td></tr>
+          <tr><th scope="row"><span class="mono">toc_lookup</span></th><td class="q-num">0,3</td><td class="q-num">260 ms</td><td class="q-num">0,1%</td></tr>
+          <tr><th scope="row"><span class="mono">rerank</span></th><td class="q-num">1,0</td><td class="q-num">310 ms</td><td class="q-num">0,1%</td></tr>
+          <tr><th scope="row"><span class="mono">llm_generate</span></th><td class="q-num">1,6</td><td class="q-num">3,25 s</td><td class="q-num">0,4%</td></tr>
+        </tbody>
+      </table>
+      <p data-i18n="an.s.toolNote" class="text-xs muted mt-8">Lần gọi/câu = số lần gọi tool trung bình trên mỗi câu trả lời Ask.</p>
+    </div>
+    <div id="sp-compare" class="an-compare" hidden>
+      <div data-i18n="an.s.compareTitle" class="an-sub">So sánh pipeline v3.4 (từ 05/06) với v3.3</div>
+      <table class="table doc-table q-table"><caption data-i18n="an.s.compareCaption" class="sr-only">So sánh chỉ số serving giữa pipeline v3.3 và v3.4</caption><colgroup><col><col style="width:72px"><col style="width:72px"><col style="width:104px"></colgroup>
+        <thead><tr><th data-i18n="an.s.metric" scope="col">Chỉ số</th><th scope="col" class="q-num">v3.3</th><th scope="col" class="q-num">v3.4</th><th scope="col" class="q-num">Δ</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">p95 Ask</th><td class="q-num">5,0 s</td><td class="q-num">4,8 s</td><td class="q-num trend-good">↓ 0,2 s<span data-i18n="an.trendBetter" class="trend-tag">tốt hơn</span></td></tr>
+          <tr><th scope="row">p50 Ask</th><td class="q-num">2,2 s</td><td class="q-num">2,1 s</td><td class="q-num trend-good">↓ 0,1 s<span data-i18n="an.trendBetter" class="trend-tag">tốt hơn</span></td></tr>
+          <tr><th data-i18n="an.s.errorRate" scope="row">Tỉ lệ lỗi</th><td class="q-num">0,71%</td><td class="q-num">0,64%</td><td class="q-num trend-good">↓ 0,07 pt<span data-i18n="an.trendBetter" class="trend-tag">tốt hơn</span></td></tr>
+          <tr><th data-i18n="an.s.avgTokensIn" scope="row">Token vào TB</th><td class="q-num">2.980</td><td class="q-num">3.420</td><td class="q-num trend-bad">↑ 15%<span data-i18n="an.trendWatch" class="trend-tag">cần theo dõi</span></td></tr>
+          <tr><th data-i18n="an.s.avgLoops" scope="row">Vòng lặp TB</th><td class="q-num">1,8</td><td class="q-num">1,6</td><td class="q-num trend-good">↓ 0,2<span data-i18n="an.trendBetter" class="trend-tag">tốt hơn</span></td></tr>
+        </tbody>
+      </table>
+      <p data-i18n="an.s.compareNote" class="text-xs muted mt-8">Số liệu Ask, cùng độ dài cửa sổ mỗi bên. Mỗi Δ có nhãn chữ "tốt hơn" hoặc "cần theo dõi" (màu chỉ bổ trợ).</p>
+    </div>
+  </section>
+  <section class="card q-span2" aria-labelledby="sp-ep-h">
+    <div class="q-whead"><h2 data-i18n="an.s.byEndpoint" class="card-title" id="sp-ep-h">Theo endpoint</h2></div>
+    <table class="table doc-table q-table" id="sp-ep-table"><caption data-i18n="an.s.byEndpointCaption" class="sr-only">Request, latency và lỗi theo endpoint, 7 ngày</caption><colgroup><col style="width:200px"><col><col style="width:88px"><col style="width:76px"><col style="width:76px"><col style="width:76px"><col style="width:112px"></colgroup>
+      <thead><tr><th scope="col">Endpoint</th><th scope="col">API</th><th scope="col" class="q-num">Request</th><th scope="col" class="q-num">p50</th><th scope="col" class="q-num">p95</th><th scope="col" class="q-num">p99</th><th data-i18n="common.errors" scope="col" class="q-num">Lỗi</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><div class="job-ell mono" title="POST /v1/answer">POST /v1/answer</div></th><td><div class="job-ell" title="RAG Answer API">RAG Answer API</div></td><td class="q-num">4.660</td><td class="q-num">2,1 s</td><td class="q-num">4,8 s</td><td class="q-num">7,9 s</td><td class="q-num">0,64%<span class="an-l2">(30)</span></td></tr>
+        <tr><th scope="row"><div class="job-ell mono" title="GET /v1/search">GET /v1/search</div></th><td><div class="job-ell" title="Search">Search</div></td><td class="q-num">6.690</td><td class="q-num">210 ms</td><td class="q-num">620 ms</td><td class="q-num">1,1 s</td><td class="q-num">0,34%<span class="an-l2">(23)</span></td></tr>
+        <tr><th scope="row"><div class="job-ell mono" title="POST /v1/retrieve">POST /v1/retrieve</div></th><td><div class="job-ell" title="Content Retrieval API">Content Retrieval API</div></td><td class="q-num">41.200</td><td class="q-num">180 ms</td><td class="q-num">520 ms</td><td class="q-num">940 ms</td><td class="q-num">0,27%<span class="an-l2">(111)</span></td></tr>
+        <tr><th scope="row"><div class="job-ell mono" title="POST /v1/graph/query">POST /v1/graph/query</div></th><td><div class="job-ell" title="Entity &amp; Relationship API">Entity &amp; Relationship API</div></td><td class="q-num">9.800</td><td class="q-num">340 ms</td><td class="q-num">1,2 s</td><td class="q-num">2,4 s</td><td class="q-num">0,92%<span class="an-l2">(90)</span></td></tr>
+        <tr><th scope="row"><div class="job-ell mono" title="GET /v1/artifacts/{id}">GET /v1/artifacts/{id}</div></th><td><div class="job-ell" title="Artifact API">Artifact API</div></td><td class="q-num">18.300</td><td class="q-num">60 ms</td><td class="q-num">190 ms</td><td class="q-num">410 ms</td><td class="q-num">0,05%<span class="an-l2">(9)</span></td></tr>
+        <tr data-an-csv-skip><th data-i18n="q.total" scope="row">Tổng</th><td></td><td class="q-num bold">80.650</td><td class="q-num muted">—</td><td class="q-num muted">—</td><td class="q-num muted">—</td><td class="q-num bold">0,33%<span class="an-l2">(263)</span></td></tr>
+      </tbody>
+    </table>
+    <p data-i18n="an.s.endpointNote" class="text-xs muted mt-8">Lỗi = 5xx, timeout và lỗi tool; trong ngoặc là số request lỗi.</p>
+  </section>
+  <section class="card" aria-labelledby="sp-cs-h">
+    <div class="q-whead"><h2 data-i18n="an.s.byConsumer" class="card-title" id="sp-cs-h">Theo consumer</h2></div>
+    <table class="table doc-table q-table" id="sp-cs-table"><caption data-i18n="an.s.byConsumerCaption" class="sr-only">Request, latency, lỗi và token theo consumer, 7 ngày</caption><colgroup><col><col style="width:76px"><col style="width:60px"><col style="width:68px"><col style="width:108px"><col style="width:84px"></colgroup>
+      <thead><tr><th scope="col">Consumer</th><th scope="col" class="q-num">Request</th><th scope="col" class="q-num">p95</th><th data-i18n="common.errors" scope="col" class="q-num">Lỗi</th><th scope="col" class="q-num">Token</th><th scope="col" class="q-num">Rate-limit</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><div data-i18n-skip class="job-ell" title="Enterprise Search (web)">Enterprise Search (web)</div></th><td class="q-num">30.900</td><td class="q-num">3,9 s</td><td class="q-num">0,28%</td><td class="q-num">6,9 triệu</td><td class="q-num">0</td></tr>
+        <tr><th scope="row"><div data-i18n-skip class="job-ell" title="LOS – Trợ lý thẩm định">LOS – Trợ lý thẩm định</div></th><td class="q-num">16.400</td><td class="q-num">5,1 s</td><td class="q-num">0,31%</td><td class="q-num">4,1 triệu</td><td class="q-num">0</td></tr>
+        <tr><th scope="row"><div data-i18n-skip class="job-ell" title="Contact Center Copilot">Contact Center Copilot</div></th><td class="q-num">14.100</td><td class="q-num">4,6 s</td><td class="q-num">0,35%</td><td class="q-num">3,2 triệu</td><td class="q-num">12</td></tr>
+        <tr><th scope="row"><div data-i18n-skip class="job-ell" title="mBank Virtual Assistant (API)">mBank Virtual Assistant (API)</div></th><td class="q-num">12.050</td><td class="q-num">5,4 s</td><td class="q-num">0,47%</td><td class="q-num">2,5 triệu</td><td class="q-num">38</td></tr>
+        <tr><th scope="row"><div data-i18n-skip class="job-ell" title="CRM KHDN (API)">CRM KHDN (API)</div></th><td class="q-num">7.200</td><td class="q-num">2,9 s</td><td class="q-num">0,22%</td><td class="q-num">1,1 triệu</td><td class="q-num">0</td></tr>
+        <tr><th data-i18n="q.total" scope="row">Tổng</th><td class="q-num bold">80.650</td><td class="q-num muted">—</td><td class="q-num bold">0,33%</td><td class="q-num bold">17,8 triệu</td><td class="q-num bold">50</td></tr>
+      </tbody>
+    </table>
+    <p data-i18n="an.s.consumerNote" class="text-xs muted mt-8">p95 của consumer = p95 trên mọi lệnh gọi của consumer đó (Ask, Search, Retrieval). Rate-limit = số request bị từ chối do vượt hạn mức.</p>
+  </section>
+  <section class="card" aria-labelledby="sp-an-h">
+    <div class="q-whead"><h2 data-i18n="an.s.anomalies" class="card-title" id="sp-an-h">Bất thường</h2></div>
+    <ol class="an-anoms">
+      <li><div class="an-anom-h"><span data-i18n="an.s.sloBreach" class="chip chip-error">Vượt SLO</span><span>11/06 09:00–11/06 10:30</span></div><p data-i18n="an.s.anom1">p95 Ask 5,6 s, Generation chậm do node gpu-02 quá tải.</p><a data-i18n="an.s.openTrace" class="link text-sm" href="enterprise-search-ask-answer.html">Mở trace</a></li>
+      <li><div class="an-anom-h"><span data-i18n="an.s.errorSpike" class="chip chip-warning">Lỗi tăng</span><span>12/06 14:10</span></div><p><span data-i18n="an.s.anom2a">Lỗi</span> <span class="mono">POST /v1/graph/query</span> <span data-i18n="an.s.anom2b">lên 3,1% trong 20 phút (timeout graph store).</span></p><a data-i18n="an.s.openTrace" class="link text-sm" href="enterprise-search-ask-answer.html">Mở trace</a></li>
+      <li><div class="an-anom-h"><span data-i18n="an.s.tokenSpike" class="chip chip-info">Token tăng</span><span>13/06 08:00</span></div><p><span data-i18n="an.s.anom3a">Token vào TB +18% sau khi publish</span> <span data-i18n-skip>Hướng dẫn Core Banking v9</span> <span data-i18n="an.s.anom3b">(chunk dài).</span></p><a data-i18n="an.s.openTrace" class="link text-sm" href="enterprise-search-ask-answer.html">Mở trace</a></li>
+    </ol>
+  </section>
+</div>
+</main>
+</div>
+</body>
+</html>

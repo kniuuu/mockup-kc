@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="auth.verifyTitle">Xác minh email · MSB Context Platform</title>
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/auth.css">
+<script src="assets/i18n.js"></script><script src="assets/auth.js"></script>
+</head>
+<body data-default="busy">
+<!-- States via ?state=… (listed in index.html). Mirrors micro-frontend/web/src/features/auth. -->
+<main class="login">
+<header class="login-top"><img class="login-logo is-light" src="assets/msb_logo_black.svg" alt="MSB"><img class="login-logo is-dark" src="assets/msb_logo_white.svg" alt="MSB"></header>
+<section class="login-main">
+<h1 class="login-product" data-i18n-skip>Enterpr<span class="login-i">i</span>se <span class="login-product-accent">Context Platform</span></h1>
+<p class="login-tagline" data-i18n="auth.subtitle">The Governance and Context for Agentic Era</p>
+<div class="login-card"><div class="login-head"><h2 class="login-title" data-i18n="auth.verifyTitle">Xác minh email</h2></div><p class="login-switch" role="status" aria-busy="true" data-st="busy" data-i18n="auth.verifyBusy">Đang xác minh…</p><p class="login-ok" role="alert" data-st="done" data-i18n="auth.verifyDone">Đã xác minh email. Quản trị viên sẽ duyệt yêu cầu trước khi bạn đăng nhập.</p><p class="login-notice" role="alert" data-st="failed" data-i18n="auth.requestFailed">Chưa gửi được yêu cầu. Thử lại sau.</p><div data-st="invalid invalid-field sent resend-busy resend-failed"><p class="login-notice" role="alert" data-st="invalid invalid-field resend-busy resend-failed" data-i18n="auth.verifyInvalid">Liên kết xác minh không hợp lệ, đã hết hạn hoặc đã được dùng. Nhập email để nhận liên kết mới.</p><form onsubmit="return false" novalidate><div class="field" data-err="invalid-field"><label for="f-email" data-i18n="auth.email">Email</label><input class="input" id="f-email" name="email" type="email" autocomplete="email" aria-required="true"><p class="field-err" id="f-email-err" hidden data-i18n="auth.errEmail">Nhập email hợp lệ</p></div><p class="login-ok" role="alert" data-st="sent" data-i18n="auth.verifyResent">Nếu yêu cầu tài khoản đang chờ xác minh, email mới đã được gửi.</p><p class="login-notice" role="alert" data-st="resend-failed" data-i18n="auth.requestFailed">Chưa gửi được yêu cầu. Thử lại sau.</p><button type="button" class="btn btn-primary login-full" data-busy="resend-busy" data-goto="sent"><span data-i18n="auth.verifyResend">Gửi lại email xác minh</span></button></form></div><p class="login-switch"><a class="login-link" href="login.html" data-i18n="auth.back">Quay lại đăng nhập</a></p></div>
+</section>
+<div class="login-tools">
+<a class="login-tool" href="#" data-lang-toggle data-i18n-attr="aria-label:auth.switchLang" aria-label="Chuyển sang English" data-i18n-skip>EN</a>
+<button type="button" class="login-tool" data-theme-toggle data-i18n-attr="aria-label:auth.switchTheme" aria-label="Đổi giao diện sáng / tối"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div>
+<aside class="login-visual"><div class="login-fallback"><img src="assets/msb_logo_white.svg" alt=""></div></aside>
+</main>
+</body></html>

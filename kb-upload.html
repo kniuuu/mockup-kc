@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload · Enterprise Knowledge · MSB Context Platform</title>
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/screens.css">
+<script src="assets/i18n.js"></script><script src="assets/ecp-taxonomy.js"></script><script src="assets/kb-data.js"></script><script src="assets/screens.js"></script><script src="assets/ecp-terms.js"></script>
+<link rel="stylesheet" href="assets/command-center.css">
+</head>
+<body class="q-flat">
+<div class="app">
+<header class="app-header"><div class="hdr-brand"><img class="logo logo-light" src="assets/msb_logo_black.svg" alt="MSB" height="20"><img class="logo logo-dark" src="assets/msb_logo_white.svg" alt="MSB" height="20"><img class="logo-symbol" src="assets/msb_symbol.svg" alt="MSB" width="40" height="23"><span class="brand-text">Context<br>Platform</span><button class="sb-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Thu gọn sidebar"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button></div><div class="hdr-main"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="ek-overview-list.html">Enterprise Context</a><span class="sep" aria-hidden="true">›</span><span class="crumb-current" aria-current="page" data-i18n="mk.web.up.title">Tải tài liệu lên</span></nav><div class="user-menu"><button data-i18n-attr="aria-label:common.accountNguyenLanRoleOwner" class="user-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="user-pop" aria-label="Tài khoản Nguyễn Lan, vai trò Owner"><span class="avatar" aria-hidden="true">NL</span><span class="role" aria-hidden="true">Owner ▾</span></button></div></div></header>
+<aside class="sidebar" id="sidebar"><nav data-i18n-attr="aria-label:common.mainNavigation" class="sidebar-nav" aria-label="Điều hướng chính"><div id="sb"><div class="nav-section"><div data-i18n="common.explore" class="nav-label">Khai thác</div><ul><li><a class="nav-item" href="enterprise-search-home.html" title="Enterprise Search" aria-label="Enterprise Search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="nav-text">Enterprise Search</span></a></li><li><a class="nav-item" href="knowledge-graph.html" title="Knowledge Graph" aria-label="Knowledge Graph"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8 7l8 1M7.5 8l2 8M16.5 10l-5 6"/></svg><span class="nav-text">Knowledge Graph</span></a></li></ul></div><div class="nav-section"><div class="nav-label">Enterprise Context</div><ul><li><a class="nav-item active" href="ek-overview-list.html" title="Knowledge Overview" aria-label="Knowledge Overview" aria-current="page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg><span class="nav-text">Knowledge Overview</span></a></li><li><a class="nav-item" href="transformation-job.html" title="Transformation Job" aria-label="Transformation Job"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg><span class="nav-text">Transformation Job</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.knowledgeConfiguration" class="nav-label">Quản trị ngữ cảnh</div><ul><li><a class="nav-item" href="config-taxonomy.html" title="Taxonomy" aria-label="Taxonomy"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h6v6H5zM13 14h6v6h-6zM8 10v7h5"/></svg><span class="nav-text">Taxonomy Management</span></a></li><li><a class="nav-item" href="config-ontology.html" title="Ontology Studio" aria-label="Ontology Studio"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v5M12 12l-6 5M12 12l6 5"/></svg><span class="nav-text">Ontology Studio</span></a></li><li><a class="nav-item" href="config-templates.html" title="Package Templates" aria-label="Package Templates"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span class="nav-text">Package Templates</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.qualityImprovement" class="nav-label">Chất lượng &amp; Cải tiến</div><ul><li><a data-i18n-attr="title:common.changesApproval;aria-label:common.changesApproval" class="nav-item" href="changes-approval-v2.html" title="Thay đổi &amp; Phê duyệt" aria-label="Thay đổi &amp; Phê duyệt"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="8"/></svg><span data-i18n="common.changesApproval" class="nav-text">Thay đổi &amp; Phê duyệt</span></a></li><li><a class="nav-item" href="quality-eval-lab.html" title="Evaluation Lab" aria-label="Evaluation Lab"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg><span class="nav-text">Evaluation Lab</span></a></li><li><a class="nav-item" href="quality-gaps.html" title="Knowledge Gaps" aria-label="Knowledge Gaps"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4M12 16h.01"/></svg><span class="nav-text">Knowledge Gaps</span></a></li></ul></div><div class="nav-section"><div data-i18n="common.observationAnalytics" class="nav-label">Quan sát &amp; Phân tích</div><ul><li><a class="nav-item" href="quality-overview.html" title="Quality Overview" aria-label="Quality Overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19l1-5.8L3.5 9.2l5.9-.9z"/></svg><span class="nav-text">Quality Overview</span></a></li><li><a class="nav-item" href="quality-feedback.html" title="Feedback" aria-label="Feedback"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="nav-text">Feedback</span></a></li><li><a class="nav-item" href="usage-retrieval.html" title="Usage &amp; Retrieval" aria-label="Usage &amp; Retrieval"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="nav-text">Usage &amp; Retrieval</span></a></li><li><a class="nav-item" href="serving-performance.html" title="Serving Performance" aria-label="Serving Performance"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="nav-text">Serving Performance</span></a></li><li><a class="nav-item" href="knowledge-value.html" title="Knowledge Value" aria-label="Knowledge Value"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M17 7H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/></svg><span class="nav-text">Knowledge Value</span></a></li></ul></div></div></nav></aside>
+<main class="app-main job-main tj-main" id="main">
+<section class="card up-card" aria-labelledby="up-h">
+<h1 id="up-h" class="sub-h" data-i18n="mk.web.up.title">Tải tài liệu lên</h1>
+<p class="muted text-sm" data-i18n="mk.web.up.desc">Chọn Knowledge Base và tệp. Sau khi tải lên, Transformation Job xử lý tệp và bạn theo dõi tiến độ trực tiếp.</p>
+<form class="up-form" id="up-form" novalidate>
+<div class="field" id="up-kb-f"><label class="bold text-sm" for="up-kb" data-i18n="mk.web.up.kb">Knowledge Base</label><select id="up-kb" class="input"><option value="" data-i18n="mk.web.up.pickKb">Chọn Knowledge Base</option></select><p class="field-err" id="up-kb-err" hidden aria-live="polite"></p></div>
+<div class="field" id="up-files-f"><label class="bold text-sm" for="up-files" data-i18n="mk.web.up.files">Tệp</label><input id="up-files" class="input up-input" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.docx,.pptx,.xlsx,.doc,.xls,.ppt,.csv,.html,.md" aria-describedby="up-files-hint"><p class="field-hint" id="up-files-hint" data-i18n="mk.web.up.filesHint" data-i18n-args='{"n":50}'>Tối đa 50 tệp, tổng 50 MB. PDF, ảnh, Word, PowerPoint, Excel, CSV, HTML, Markdown.</p><p class="field-err" id="up-files-err" hidden aria-live="polite"></p></div>
+<ul class="up-files" id="up-list" data-i18n-attr="aria-label:mk.web.up.selected" aria-label="Tệp đã chọn" hidden></ul>
+<p class="up-error" id="up-error" role="alert" hidden></p>
+<div class="row"><a class="btn btn-secondary" href="transformation-job.html" data-i18n="common.cancel">Hủy</a><button class="btn btn-primary" type="submit" data-i18n="mk.web.up.submit">Tải lên và xử lý</button></div>
+</form>
+</section>
+<script>
+/* Upload documents (frontend /knowledge/upload, upload-screen.tsx). ?kb=<id> preselects the KB. Validation as the app:
+ * KB and at least one file (shown after the first submit), at most 50 files and 50 MB in total (shown at once).
+ * Mock submit goes to the Job Detail of the job the upload starts. ?fail=403|413|415|500 shows the server error instead;
+ * changing the KB or the files clears it. */
+(function () {
+  var I = window.ECP_I18N, T = I.tr, KB = window.ECP_KB, MAX_FILES = 50, MAX_BYTES = 50 * 1024 * 1024;
+  var q = new URLSearchParams(location.search), FAIL = { 403: 'errNoAccess', 404: 'errNoAccess', 413: 'errTooLarge', 415: 'errType' };
+  var kbSel = document.getElementById('up-kb'), inp = document.getElementById('up-files'), list = document.getElementById('up-list');
+  var errBox = document.getElementById('up-error'), btn = document.querySelector('#up-form [type="submit"]');
+  var touched = false, files = [], failKey = null;
+  var VI = { errKb: 'Chọn một Knowledge Base.', errNoFiles: 'Chọn ít nhất một tệp.', errTooMany: 'Tối đa {n} tệp mỗi lần.', errTooLarge: 'Tổng dung lượng vượt 50 MB.', errType: 'Có tệp không được hỗ trợ.', errNoAccess: 'Bạn không có quyền tải lên Knowledge Base này (cần Owner, Steward hoặc Admin).', errFailed: 'Chưa tải lên được. Thử lại sau.' };
+  function tr(k, a) { return T('mk.web.up.' + k, VI[k], a); }
+  function size(b) { var mb = b >= 1048576; return new Intl.NumberFormat(I.lang, { style: 'unit', unit: mb ? 'megabyte' : 'kilobyte', maximumFractionDigits: 1 }).format(b / (mb ? 1048576 : 1024)); }
+  KB.all().forEach(function (k) { var o = document.createElement('option'); o.value = k.id; o.textContent = k.name; o.setAttribute('data-i18n-skip', ''); kbSel.appendChild(o); });
+  kbSel.value = q.get('kb') || '';
+  function setErr(id, msg) {
+    var f = document.getElementById(id + '-f'), e = document.getElementById(id + '-err'), c = f.querySelector('.input');
+    f.classList.toggle('has-error', !!msg); e.hidden = !msg; e.textContent = msg || '';
+    if (msg) c.setAttribute('aria-invalid', 'true'); else c.removeAttribute('aria-invalid');
+    var d = [c.id === 'up-files' ? 'up-files-hint' : '', msg ? e.id : ''].filter(Boolean).join(' ');
+    if (d) c.setAttribute('aria-describedby', d); else c.removeAttribute('aria-describedby');
+  }
+  function render() {
+    var total = files.reduce(function (n, f) { return n + f.size; }, 0);
+    var tooMany = files.length > MAX_FILES, tooLarge = total > MAX_BYTES;
+    setErr('up-kb', touched && !kbSel.value ? tr('errKb') : '');
+    setErr('up-files', touched && !files.length ? tr('errNoFiles') : tooMany ? tr('errTooMany', { n: MAX_FILES }) : tooLarge ? tr('errTooLarge') : '');
+    list.hidden = !files.length; list.textContent = '';
+    files.forEach(function (f) { var li = document.createElement('li'); li.innerHTML = '<span class="up-name"></span><span class="muted"></span>'; li.children[0].textContent = f.name; li.children[1].textContent = size(f.size); list.appendChild(li); });
+    if (files.length) { var t = document.createElement('li'); t.className = 'up-total'; t.innerHTML = '<span></span><span></span>'; t.children[0].textContent = files.length === 1 ? T('mk.web.up.nFiles1', '1 tệp') : T('mk.web.up.nFiles', '{n} tệp', { n: files.length }); t.children[1].textContent = size(total); list.appendChild(t); }
+    errBox.hidden = !failKey; errBox.textContent = failKey ? tr(failKey) : '';
+    return !kbSel.value || !files.length || tooMany || tooLarge;
+  }
+  function changed() { failKey = null; render(); }
+  kbSel.addEventListener('change', changed);
+  inp.addEventListener('change', function () { files = Array.prototype.slice.call(inp.files || []); changed(); });
+  document.getElementById('up-form').addEventListener('submit', function (e) {
+    e.preventDefault(); touched = true;
+    if (render()) return;
+    btn.disabled = true; btn.setAttribute('aria-busy', 'true');
+    setTimeout(function () {
+      btn.disabled = false; btn.removeAttribute('aria-busy');
+      var f = q.get('fail');
+      if (f) { failKey = FAIL[f] || 'errFailed'; render(); return; }
+      location.href = 'job-detail.html?job=4826';
+    }, 400);
+  });
+  I.onChange(render);
+})();
+</script>
+</main>
+
+</div>
+</body>
+</html>

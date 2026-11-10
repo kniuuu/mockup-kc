@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tài liệu · MSB Context Platform</title>
+<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="assets/screens.css">
+<script src="assets/i18n.js"></script><script src="assets/ecp-taxonomy.js"></script><script src="assets/kb-data.js"></script><script src="assets/screens.js"></script><script src="assets/cr-data.js"></script><script src="assets/doc-viewer.js"></script>
+<link rel="stylesheet" href="assets/command-center.css">
+</head>
+<body>
+<div class="viewer-overlay dv" data-doc-viewer>
+<header class="viewer-topbar dv-topbar">
+<div class="viewer-crumb">
+<span class="file-ico sm" aria-hidden="true" data-dv-ico></span>
+<div class="dv-titles"><h1 data-i18n-skip class="viewer-title" data-dv-title></h1><div class="muted text-sm dv-sub" data-i18n-skip data-dv-sub></div></div>
+</div>
+<div class="viewer-top-actions">
+<button class="btn btn-sm btn-secondary" type="button" data-dv-download><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-i18n="dv.downloadOriginal">Tải bản gốc</span></button>
+</div>
+</header>
+<div class="banner banner-warning dv-dl-note" role="status" data-dv-dl-note hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span class="grow" data-i18n="dv.downloadUnavailable">Chưa tải được bản gốc: bản mockup chưa kết nối kho tệp gốc của tài liệu.</span><button class="icon-btn is-sm" type="button" data-dv-dl-close data-i18n-attr="aria-label:common.close" aria-label="Đóng"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<main class="viewer-body" id="main">
+<div class="empty-state dv-missing" data-dv-missing hidden><h2 data-i18n="dv.notFound">Không tìm thấy tài liệu</h2><p class="muted" data-i18n="dv.notFoundHint">Liên kết không còn hợp lệ hoặc bạn không có quyền xem tài liệu này.</p></div>
+<div class="viewer-split" data-dv-split>
+<section data-i18n-attr="aria-label:ws.documentContent" class="dv-doc" aria-label="Nội dung văn bản">
+<div class="dv-bar">
+<div class="dv-nav" role="group" data-i18n-attr="aria-label:dv.passageNav" aria-label="Chuyển đoạn khớp">
+<button class="icon-btn is-sm" type="button" data-dv-prev data-i18n-attr="aria-label:dv.prevPassage;title:dv.prevPassage" aria-label="Đoạn trước" title="Đoạn trước"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button>
+<button class="icon-btn is-sm" type="button" data-dv-next data-i18n-attr="aria-label:dv.nextPassage;title:dv.nextPassage" aria-label="Đoạn tiếp" title="Đoạn tiếp"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+</div>
+<span class="dv-pos" aria-live="polite" data-dv-pos></span>
+<span class="dv-ctx muted" data-i18n-skip data-dv-ctx hidden></span>
+</div>
+<div class="viewer-doc dv-pages" data-dv-pages></div>
+</section>
+<div data-i18n-attr="aria-label:common.dragToResize" class="col-resizer" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Kéo để chỉnh độ rộng" data-col-resizer></div>
+<aside class="viewer-side dv-side" data-i18n-attr="aria-label:common.documentInformation" aria-label="Thông tin văn bản">
+<div class="viewer-panel">
+<section aria-labelledby="dv-psg-h">
+<div class="row-between dv-side-h"><h2 class="sub-h" id="dv-psg-h" data-i18n="dv.matchingPassages">Đoạn khớp</h2><span class="muted text-sm" data-dv-count></span></div>
+<ul class="chunk-list" data-dv-list></ul>
+</section>
+<section class="detail-sub" aria-labelledby="dv-info-h">
+<h2 class="sub-h" id="dv-info-h" data-i18n="common.documentInformation">Thông tin văn bản</h2>
+<dl class="kv kv-detail" data-dv-info></dl>
+</section>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body>
+</html>
