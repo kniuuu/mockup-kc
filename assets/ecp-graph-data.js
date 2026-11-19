@@ -145,8 +145,8 @@
       props: { nhan: t[4], status: t[3], cardinality: t[5], crId: t[3] === 'invalid' ? '—' : 'CR-031' } };
   });
 
-  // ---- knowledge-graph page (kg): layer model Lexical (Document Structure, Provenance, Similarity) + Semantic (Entity / Domain,
-  // Concept / Taxonomy, Evidence). Entity instances reuse the bank nodes; lexical nodes come from Transformation Job › Indexing.
+  // ---- knowledge-graph page (kg): layers Semantic (Entity / Domain, Concept / Taxonomy) + Lexical (Document Structure).
+  // Entity instances reuse the bank nodes; documents and chunks come from Transformation Job › Indexing.
   var bankById = {}; nodes.forEach(function (n) { bankById[n.id] = n; });
   function E(id, hidden) {
     var b = bankById[id], p = {};
@@ -170,12 +170,7 @@
     N('ch-08-13', 'Chunk', 'QĐ-TD-08 #13', { chunk_id: 'QĐ-TD-08#13', page: 12, position: 'Điều 8 · đoạn 2', chunkType: 'paragraph', text: 'Phê duyệt cấp 2 do Hội đồng tín dụng…' }),
     N('ch-08-31', 'Chunk', 'QĐ-TD-08 #31', { chunk_id: 'QĐ-TD-08#31', page: 27, position: 'Điều 15 · đoạn 1', chunkType: 'paragraph', text: 'Tổng dư nợ cấp tín dụng không vượt quá 15% vốn tự có…' }),
     N('ch-pl02-02', 'Chunk', 'Phụ lục 02 #2', { chunk_id: 'QĐ-TD-08/PL02#2', page: 2, position: 'Mục 1 · bảng 1', chunkType: 'table', text: 'Gói hạn mức tuần hoàn 5 tỷ…' }),
-    N('ch-kyc-07', 'Chunk', 'Sổ tay KYC #7', { chunk_id: 'ST-TT-02#7', page: 9, position: 'Mục 3 · đoạn 2', chunkType: 'paragraph', text: 'Xác minh chủ sở hữu hưởng lợi…' }),
-    // Lexical › Provenance: source, version and processing run of each document
-    N('src-upload', 'Source', 'Tải lên thủ công', { name: 'Tải lên thủ công', kind: 'Upload', note: 'Phase 1 chỉ có nguồn Upload' }),
-    N('ver-08-23', 'Version', 'QĐ-TD-08 v2.3', { document: 'QĐ-TD-08', version: 'v2.3', status: 'Đang hiệu lực', checksum: 'sha256:9f3c…' }),
-    N('ver-08-22', 'Version', 'QĐ-TD-08 v2.2', { document: 'QĐ-TD-08', version: 'v2.2', status: 'Bản cũ' }, true),
-    N('job-0142', 'Job', 'TJ-0142', { job: 'TJ-0142', trigger: 'Tải lên', pipeline: 'Acquisition → Validation → Processing → Indexing → Enrichment', finishedAt: '2026-11-12 09:40' })
+    N('ch-kyc-07', 'Chunk', 'Sổ tay KYC #7', { chunk_id: 'ST-TT-02#7', page: 9, position: 'Mục 3 · đoạn 2', chunkType: 'paragraph', text: 'Xác minh chủ sở hữu hưởng lợi…' })
   ];
   var kgTriples = [
     // Entity / Domain
@@ -184,30 +179,22 @@
     'dep-khdn OWNS proc-khdn', 'proc-kyc IMPLEMENTS pol-kyc', 'proc-thamdinh REQUIRES pol-xhtd', 'proc-thamdinh GOVERNED_BY pol-tsbd',
     'pol-15von APPLIES_TO prod-sme', 'pol-15von BASED_ON reg-tt39', 'dep-qtrr OWNS pol-15von', 'dep-qtrr OWNS pol-xhtd', 'dep-khdn OWNS prod-sme',
     'prod-5ty PART_OF prod-sme', 'pol-kyc BASED_ON reg-tt09', 'dep-tuanthu OWNS pol-kyc', 'per-binh MANAGES dep-khdn', 'per-chau WORKS_IN dep-hdtd',
-    // Concept / Taxonomy
-    'tax-tddn BROADER tax-tindung', 'con-vtc BROADER tax-tddn', 'con-ubo BROADER tax-tuanthu', 'pol-15von RELATED_TO con-vtc', 'pol-kyc RELATED_TO con-ubo',
-    'doc-qdtd08 TAGGED_WITH tax-tddn', 'doc-pl02 TAGGED_WITH tax-tddn', 'doc-sotaykyc TAGGED_WITH tax-tuanthu',
-    // Evidence
-    'proc-khdn SUPPORTED_BY ch-08-12', 'proc-pd2 SUPPORTED_BY ch-08-13', 'pol-15von SUPPORTED_BY ch-08-31', 'prod-5ty SUPPORTED_BY ch-pl02-02',
-    'proc-kyc SUPPORTED_BY ch-kyc-07', 'pol-kyc SUPPORTED_BY ch-kyc-07',
+    // Concept / Taxonomy: Taxonomy tree + tags assigned to each document
+    'tax-tddn BROADER tax-tindung', 'con-vtc BROADER tax-tddn', 'con-ubo BROADER tax-tuanthu',
+    'doc-qdtd08 TAGGED_WITH tax-tddn', 'doc-qdtd08 TAGGED_WITH con-vtc', 'doc-pl02 TAGGED_WITH tax-tddn', 'doc-sotaykyc TAGGED_WITH tax-tuanthu', 'doc-sotaykyc TAGGED_WITH con-ubo',
+    // Entity / Domain: entities mentioned in a chunk (extracted at Graphifying)
+    'ch-08-12 MENTIONS proc-khdn', 'ch-08-13 MENTIONS proc-pd2', 'ch-08-31 MENTIONS pol-15von', 'ch-pl02-02 MENTIONS prod-5ty',
+    'ch-kyc-07 MENTIONS proc-kyc', 'ch-kyc-07 MENTIONS pol-kyc',
     // Document Structure
     'doc-qdtd08 CONTAINS ch-08-12', 'doc-qdtd08 CONTAINS ch-08-13', 'doc-qdtd08 CONTAINS ch-08-31', 'ch-08-12 NEXT ch-08-13',
-    'doc-pl02 CONTAINS ch-pl02-02', 'doc-sotaykyc CONTAINS ch-kyc-07', 'doc-qdtd08 REFERENCES doc-pl02',
-    // Provenance
-    'doc-qdtd08 FROM_SOURCE src-upload', 'doc-pl02 FROM_SOURCE src-upload', 'doc-sotaykyc FROM_SOURCE src-upload',
-    'doc-qdtd08 HAS_VERSION ver-08-23', 'ver-08-23 SUPERSEDES ver-08-22', 'ver-08-23 PROCESSED_BY job-0142',
-    // Similarity
-    'ch-08-12 SIMILAR_TO ch-pl02-02', 'ch-08-13 SIMILAR_TO ch-pl02-02', 'ch-08-31 SIMILAR_TO ch-pl02-02'
+    'doc-pl02 CONTAINS ch-pl02-02', 'doc-sotaykyc CONTAINS ch-kyc-07', 'doc-qdtd08 REFERENCES doc-pl02'
   ];
-  var SIM = { 'ch-08-12': 0.91, 'ch-08-13': 0.84, 'ch-08-31': 0.78 };
   var kgRels = kgTriples.map(function (t, i) {
     var p = t.split(' '), props;
-    if (p[1] === 'SIMILAR_TO') props = { score: SIM[p[0]], method: 'cosine (embedding)' };
-    else if (p[1] === 'SUPPORTED_BY') props = { confidence: Math.round((0.86 + (i % 5) / 50) * 100) / 100, extractedBy: 'Graphifying · TJ-0142' };
+    if (p[1] === 'MENTIONS') props = { confidence: Math.round((0.86 + (i % 5) / 50) * 100) / 100, extractedBy: 'Graphifying · TJ-0142' };
     else if (p[1] === 'CONTAINS' || p[1] === 'NEXT' || p[1] === 'REFERENCES') props = { writtenBy: 'Indexing · TJ-0142' };
     else if (p[1] === 'TAGGED_WITH') props = { taggedBy: 'Verifying Tags · TJ-0142', confidence: 0.93 };
-    else if (p[1] === 'BROADER' || p[1] === 'RELATED_TO') props = { from: 'Taxonomy MSB · v3' };
-    else if (p[1] === 'FROM_SOURCE' || p[1] === 'HAS_VERSION' || p[1] === 'SUPERSEDES' || p[1] === 'PROCESSED_BY') props = { writtenBy: 'Acquisition · TJ-0142' };
+    else if (p[1] === 'BROADER') props = { from: 'Taxonomy MSB · v3' };
     else props = { ontology: 'Ontology MSB · v4', confidence: Math.round((0.8 + (i * 37 % 19) / 100) * 100) / 100, evidence: EV[i % EV.length] };
     return { id: 'k' + (i + 1), source: p[0], target: p[2], type: p[1], props: props };
   });

@@ -7,7 +7,7 @@
   // i18n (assets/i18n.js): T(key, viFallback, args); falls back to the vi literal when i18n.js is absent
   var T = (window.ECP_I18N && window.ECP_I18N.tr) || function (k, v, a) { return String(v).replace(/\{(\w+)\}/g, function (m, x) { return a && a[x] !== undefined ? a[x] : m; }); };
   var LBL = { Document: 'kg.lbl.document', Policy: 'kg.lbl.policy', Regulation: 'kg.lbl.regulation', Department: 'kg.lbl.department', Person: 'kg.lbl.person', Product: 'kg.lbl.product', Concept: 'kg.lbl.concept', Process: 'kg.lbl.process',
-    Chunk: 'kg.lbl.chunk', Source: 'kg.lbl.source', Version: 'kg.lbl.version', Job: 'kg.lbl.job' };
+    Chunk: 'kg.lbl.chunk' };
   // Neo4j palette: fill, stroke, caption (caption/fill contrast >= 4.5:1)
   var PALETTE = {
     Document: ['#F79767', '#E07B4A', '#1F2A37', 'Tài liệu'],
@@ -20,12 +20,9 @@
     Process: ['#2F6DB5', '#1F5596', '#FFFFFF', 'Quy trình'],
     Domain: ['#C990C0', '#AD72A4', '#1F2A37', 'Domain'],
     Evidence: ['#57C7E3', '#3AAACB', '#1F2A37', 'Evidence'],
-    Chunk: ['#F9C6A8', '#E0A27E', '#1F2A37', 'Chunk'],
-    Source: ['#B5D6E8', '#8DB6CC', '#1F2A37', 'Nguồn'],
-    Version: ['#A9C7FF', '#7FA3E0', '#1F2A37', 'Phiên bản'],
-    Job: ['#C9D86A', '#A9B84A', '#1F2A37', 'Job xử lý']
+    Chunk: ['#F9C6A8', '#E0A27E', '#1F2A37', 'Chunk']
   };
-  var BASE_R = { Department: 30, Regulation: 30, Policy: 26, Process: 26, Product: 26, Domain: 28, Document: 24, Concept: 24, Evidence: 24, Person: 22, Chunk: 20, Source: 22, Version: 20, Job: 20 };
+  var BASE_R = { Department: 30, Regulation: 30, Policy: 26, Process: 26, Product: 26, Domain: 28, Document: 24, Concept: 24, Evidence: 24, Person: 22, Chunk: 20 };
   // relationship-type category colours (filter tags); caption via captionFor() = #1F2A37, >= 6.40:1 on every entry
   var REL_PALETTE = ['#68BDF6', '#F3A6D1', '#9DD7A5', '#FFD86E', '#B6A1E8', '#F9A98B', '#7FD1C7', '#C9D86A', '#E7B6F0', '#A9C7FF', '#F2C49B', '#B5D6E8', '#D7A9A0', '#B9E0A5'];
   var FICONS = { filter: '<path d="M4 5h16l-6 7.5V18l-4 2v-7.5z"/>', eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -48,30 +45,18 @@
     // relationships whose type is in a selected layer, plus nodes whose type is in it or that sit at either end of such a relationship.
     kg: { types: {}, domains: {}, layers: [
       { key: 'entity', group: 'semantic', col: ['#2F6DB5', '#1F5596', '#FFFFFF'], name: ['kg.l2.entity', 'Entity / Domain'],
-        desc: ['kg.l2.entityD', 'Thực thể nghiệp vụ và quan hệ nghiệp vụ giữa chúng.'],
+        desc: ['kg.l2.entityD', 'Các thực thể nghiệp vụ, quan hệ giữa chúng và chunk nhắc tới thực thể.'],
         src: ['kg.l2.entityS', 'Transformation Job › Enrichment › Graphifying, trích xuất theo Ontology Preset của KB (Ontology Studio).'],
         nodes: ['Process', 'Policy', 'Regulation', 'Product', 'Department', 'Person'],
-        rels: ['PART_OF', 'GOVERNED_BY', 'APPROVES', 'OWNS', 'IMPLEMENTS', 'APPLIES_TO', 'REQUIRES', 'BASED_ON', 'MANAGES', 'WORKS_IN'] },
+        rels: ['PART_OF', 'GOVERNED_BY', 'APPROVES', 'OWNS', 'IMPLEMENTS', 'APPLIES_TO', 'REQUIRES', 'BASED_ON', 'MANAGES', 'WORKS_IN', 'MENTIONS'] },
       { key: 'concept', group: 'semantic', col: ['#D9C8AE', '#BFAE93', '#1F2A37'], name: ['kg.l2.concept', 'Concept / Taxonomy'],
-        desc: ['kg.l2.conceptD', 'Khái niệm và tag của Taxonomy, cây cha con (BROADER) và tag gắn cho tài liệu.'],
-        src: ['kg.l2.conceptS', 'Taxonomy Preset của KB (Taxonomy Management); tag gắn ở Enrichment › Verifying Tags.'],
-        nodes: ['Concept'], rels: ['BROADER', 'RELATED_TO', 'TAGGED_WITH'] },
-      { key: 'evidence', group: 'semantic', col: ['#57C7E3', '#3AAACB', '#1F2A37'], name: ['kg.l2.evidence', 'Evidence'],
-        desc: ['kg.l2.evidenceD', 'Bằng chứng: nối thực thể với chunk chứa đoạn văn làm căn cứ.'],
-        src: ['kg.l2.evidenceS', 'Transformation Job › Enrichment › Graphifying (lưu chunk nguồn của mỗi thực thể trích xuất).'],
-        nodes: [], rels: ['SUPPORTED_BY'] },
+        desc: ['kg.l2.conceptD', 'Các tag, khái niệm thuộc Taxonomy gắn với văn bản, kèm cây cha con (BROADER).'],
+        src: ['kg.l2.conceptS', 'Taxonomy Preset của KB (Taxonomy Management); tag gắn cho văn bản ở Enrichment › Verifying Tags.'],
+        nodes: ['Concept'], rels: ['BROADER', 'TAGGED_WITH'] },
       { key: 'docstruct', group: 'lexical', col: ['#F79767', '#E07B4A', '#1F2A37'], name: ['kg.l2.docstruct', 'Document Structure'],
-        desc: ['kg.l2.docstructD', 'Tài liệu, chunk và quan hệ cấu trúc: chứa, nối tiếp, tham chiếu.'],
+        desc: ['kg.l2.docstructD', 'Các văn bản, chunk và quan hệ cấu trúc: chứa, nối tiếp, tham chiếu.'],
         src: ['kg.l2.docstructS', 'Transformation Job › Indexing (chunking, ghi lexical graph).'],
-        nodes: ['Document', 'Chunk'], rels: ['CONTAINS', 'NEXT', 'REFERENCES'] },
-      { key: 'provenance', group: 'lexical', col: ['#B5D6E8', '#8DB6CC', '#1F2A37'], name: ['kg.l2.provenance', 'Provenance'],
-        desc: ['kg.l2.provenanceD', 'Nguồn, phiên bản và lượt xử lý của tài liệu. Vị trí đoạn văn nằm ở thuộc tính trang, vị trí của Chunk.'],
-        src: ['kg.l2.provenanceS', 'Màn Tải tài liệu lên và Transformation Job › Acquisition, Validation.'],
-        nodes: ['Source', 'Version', 'Job'], rels: ['FROM_SOURCE', 'HAS_VERSION', 'SUPERSEDES', 'PROCESSED_BY'] },
-      { key: 'similarity', group: 'lexical', col: ['#9DD7A5', '#7BBB84', '#1F2A37'], name: ['kg.l2.similarity', 'Similarity'],
-        desc: ['kg.l2.similarityD', 'Chunk có nội dung tương đồng, kèm điểm score.'],
-        src: ['kg.l2.similarityS', 'Transformation Job › Indexing (so sánh embedding).'],
-        nodes: [], rels: ['SIMILAR_TO'] }
+        nodes: ['Document', 'Chunk'], rels: ['CONTAINS', 'NEXT', 'REFERENCES'] }
     ] }
   };
   var ICONS = {
@@ -877,7 +862,7 @@
         var x = L2BY[it.key];
         return '<dt>' + esc(it.label) + ' <span class="ecpg-l2-n">' + esc(T('kg.l2.nUnit', '{n} node, {r} quan hệ', { n: it.n, r: it.r })) + '</span></dt>' +
           '<dd>' + esc(T(x.desc[0], x.desc[1])) + '</dd>' +
-          '<dd><b>' + esc(T('kg.l2.nodesLbl', 'Loại node')) + ':</b> ' + esc(x.nodes.length ? x.nodes.map(lblName).join(', ') : T('kg.l2.endpoints', 'không có loại riêng, lấy node ở hai đầu quan hệ')) + '</dd>' +
+          '<dd><b>' + esc(T('kg.l2.nodesLbl', 'Loại node')) + ':</b> ' + esc(x.nodes.map(lblName).join(', ')) + '</dd>' +
           '<dd><b>' + esc(T('kg.l2.relsLbl', 'Loại quan hệ')) + ':</b> ' + esc(x.rels.join(', ')) + '</dd>' +
           '<dd><b>' + esc(T('kg.l2.srcHead', 'Nguồn dữ liệu')) + ':</b> ' + esc(T(x.src[0], x.src[1])) + '</dd>';
       }).join('') + '</dl>';
