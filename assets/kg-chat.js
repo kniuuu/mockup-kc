@@ -30,7 +30,7 @@
     'Graph có 3 cụm chính: <b>tín dụng KHDN</b> (quy trình → chính sách → Thông tư 39), <b>tuân thủ</b> (KYC, AML → Thông tư 09) và <b>ALM / lãi suất</b> do ALCO sở hữu.'
   ];
   // graph focus per suggestion (null keeps the graph as it is: "selected node" and "this graph" refer to what is on screen)
-  var SUG_FOCUS = ['pol-hanmuc', 'prod-sme', 'dep-khdn', 'prod-sme', null, null];
+  var SUG_FOCUS = ['pol-15von', 'prod-sme', 'dep-khdn', 'prod-sme', null, null];
   var GENERIC = 'Mockup: câu trả lời sẽ dựa trên các node và quan hệ trong graph hiện tại, kèm evidence từ tài liệu nguồn.';
 
   var now = Date.now();

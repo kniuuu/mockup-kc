@@ -169,3 +169,13 @@
 @media (prefers-reduced-motion: reduce) {
   .ecpg-node, .ecpg-rel, .ecpg-rlabel { transition: none; }
 }
+/* layer model v2 (knowledge-graph page): empty layer, per-section rule line, selected-layer info box */
+.ecpg-tag[disabled] { cursor: not-allowed; opacity: .55; }
+.ecpg-tag[disabled]:hover { border-color: transparent; }
+.ecpg-fs-rule { margin: 0 0 6px; font-size: var(--fs-xs); color: var(--muted); }
+.ecpg-l2-info { margin: 10px 0 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: var(--fs-xs); color: var(--muted); }
+.ecpg-l2-info dt { margin: 0; font-weight: 700; color: var(--text); }
+.ecpg-l2-info dt + dd { margin-top: 2px; }
+.ecpg-l2-info dd { margin: 0; }
+.ecpg-l2-info dd + dt { margin-top: 8px; }
+.ecpg-l2-n { font-weight: 500; color: var(--muted); }

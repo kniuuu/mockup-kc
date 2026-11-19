@@ -6,7 +6,8 @@
   var NS = 'http://www.w3.org/2000/svg';
   // i18n (assets/i18n.js): T(key, viFallback, args); falls back to the vi literal when i18n.js is absent
   var T = (window.ECP_I18N && window.ECP_I18N.tr) || function (k, v, a) { return String(v).replace(/\{(\w+)\}/g, function (m, x) { return a && a[x] !== undefined ? a[x] : m; }); };
-  var LBL = { Document: 'kg.lbl.document', Policy: 'kg.lbl.policy', Regulation: 'kg.lbl.regulation', Department: 'kg.lbl.department', Person: 'kg.lbl.person', Product: 'kg.lbl.product', Concept: 'kg.lbl.concept', Process: 'kg.lbl.process' };
+  var LBL = { Document: 'kg.lbl.document', Policy: 'kg.lbl.policy', Regulation: 'kg.lbl.regulation', Department: 'kg.lbl.department', Person: 'kg.lbl.person', Product: 'kg.lbl.product', Concept: 'kg.lbl.concept', Process: 'kg.lbl.process',
+    Chunk: 'kg.lbl.chunk', Source: 'kg.lbl.source', Version: 'kg.lbl.version', Job: 'kg.lbl.job' };
   // Neo4j palette: fill, stroke, caption (caption/fill contrast >= 4.5:1)
   var PALETTE = {
     Document: ['#F79767', '#E07B4A', '#1F2A37', 'Tài liệu'],
@@ -18,9 +19,13 @@
     Concept: ['#D9C8AE', '#BFAE93', '#1F2A37', 'Khái niệm'],
     Process: ['#2F6DB5', '#1F5596', '#FFFFFF', 'Quy trình'],
     Domain: ['#C990C0', '#AD72A4', '#1F2A37', 'Domain'],
-    Evidence: ['#57C7E3', '#3AAACB', '#1F2A37', 'Evidence']
+    Evidence: ['#57C7E3', '#3AAACB', '#1F2A37', 'Evidence'],
+    Chunk: ['#F9C6A8', '#E0A27E', '#1F2A37', 'Chunk'],
+    Source: ['#B5D6E8', '#8DB6CC', '#1F2A37', 'Nguồn'],
+    Version: ['#A9C7FF', '#7FA3E0', '#1F2A37', 'Phiên bản'],
+    Job: ['#C9D86A', '#A9B84A', '#1F2A37', 'Job xử lý']
   };
-  var BASE_R = { Department: 30, Regulation: 30, Policy: 26, Process: 26, Product: 26, Domain: 28, Document: 24, Concept: 24, Evidence: 24, Person: 22 };
+  var BASE_R = { Department: 30, Regulation: 30, Policy: 26, Process: 26, Product: 26, Domain: 28, Document: 24, Concept: 24, Evidence: 24, Person: 22, Chunk: 20, Source: 22, Version: 20, Job: 20 };
   // relationship-type category colours (filter tags); caption via captionFor() = #1F2A37, >= 6.40:1 on every entry
   var REL_PALETTE = ['#68BDF6', '#F3A6D1', '#9DD7A5', '#FFD86E', '#B6A1E8', '#F9A98B', '#7FD1C7', '#C9D86A', '#E7B6F0', '#A9C7FF', '#F2C49B', '#B5D6E8', '#D7A9A0', '#B9E0A5'];
   var FICONS = { filter: '<path d="M4 5h16l-6 7.5V18l-4 2v-7.5z"/>', eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -38,7 +43,36 @@
       domains: { 'Tín dụng doanh nghiệp': ['prod-sme', 'prod-5ty', 'prod-baolanh', 'prod-xnk', 'proc-khdn', 'proc-thamdinh', 'proc-pd2', 'proc-dinhgia', 'proc-giaingan'],
         'Tín dụng cá nhân': ['prod-vaytd', 'prod-vaynha'], 'Thẻ': ['prod-the'], 'Tuân thủ': ['proc-kyc'] } },
     ontology: { types: { Domain: ['domain'], Concept: ['concept'], Evidence: ['evidence'], Document: ['structure', 'provenance'] },
-      domains: { 'Tín dụng doanh nghiệp': ['t-loan', 't-collateral', 't-org'], 'Khách hàng': ['t-customer'], 'Sản phẩm': ['t-product'] } }
+      domains: { 'Tín dụng doanh nghiệp': ['t-loan', 't-collateral', 't-org'], 'Khách hàng': ['t-customer'], 'Sản phẩm': ['t-product'] } },
+    // knowledge-graph page (layer model v2): a layer = a set of node types + relationship types. Selecting layers keeps the
+    // relationships whose type is in a selected layer, plus nodes whose type is in it or that sit at either end of such a relationship.
+    kg: { types: {}, domains: {}, layers: [
+      { key: 'entity', group: 'semantic', col: ['#2F6DB5', '#1F5596', '#FFFFFF'], name: ['kg.l2.entity', 'Entity / Domain'],
+        desc: ['kg.l2.entityD', 'Thực thể nghiệp vụ và quan hệ nghiệp vụ giữa chúng.'],
+        src: ['kg.l2.entityS', 'Transformation Job › Enrichment › Graphifying, trích xuất theo Ontology Preset của KB (Ontology Studio).'],
+        nodes: ['Process', 'Policy', 'Regulation', 'Product', 'Department', 'Person'],
+        rels: ['PART_OF', 'GOVERNED_BY', 'APPROVES', 'OWNS', 'IMPLEMENTS', 'APPLIES_TO', 'REQUIRES', 'BASED_ON', 'MANAGES', 'WORKS_IN'] },
+      { key: 'concept', group: 'semantic', col: ['#D9C8AE', '#BFAE93', '#1F2A37'], name: ['kg.l2.concept', 'Concept / Taxonomy'],
+        desc: ['kg.l2.conceptD', 'Khái niệm và tag của Taxonomy, cây cha con (BROADER) và tag gắn cho tài liệu.'],
+        src: ['kg.l2.conceptS', 'Taxonomy Preset của KB (Taxonomy Management); tag gắn ở Enrichment › Verifying Tags.'],
+        nodes: ['Concept'], rels: ['BROADER', 'RELATED_TO', 'TAGGED_WITH'] },
+      { key: 'evidence', group: 'semantic', col: ['#57C7E3', '#3AAACB', '#1F2A37'], name: ['kg.l2.evidence', 'Evidence'],
+        desc: ['kg.l2.evidenceD', 'Bằng chứng: nối thực thể với chunk chứa đoạn văn làm căn cứ.'],
+        src: ['kg.l2.evidenceS', 'Transformation Job › Enrichment › Graphifying (lưu chunk nguồn của mỗi thực thể trích xuất).'],
+        nodes: [], rels: ['SUPPORTED_BY'] },
+      { key: 'docstruct', group: 'lexical', col: ['#F79767', '#E07B4A', '#1F2A37'], name: ['kg.l2.docstruct', 'Document Structure'],
+        desc: ['kg.l2.docstructD', 'Tài liệu, chunk và quan hệ cấu trúc: chứa, nối tiếp, tham chiếu.'],
+        src: ['kg.l2.docstructS', 'Transformation Job › Indexing (chunking, ghi lexical graph).'],
+        nodes: ['Document', 'Chunk'], rels: ['CONTAINS', 'NEXT', 'REFERENCES'] },
+      { key: 'provenance', group: 'lexical', col: ['#B5D6E8', '#8DB6CC', '#1F2A37'], name: ['kg.l2.provenance', 'Provenance'],
+        desc: ['kg.l2.provenanceD', 'Nguồn, phiên bản và lượt xử lý của tài liệu. Vị trí đoạn văn nằm ở thuộc tính trang, vị trí của Chunk.'],
+        src: ['kg.l2.provenanceS', 'Màn Tải tài liệu lên và Transformation Job › Acquisition, Validation.'],
+        nodes: ['Source', 'Version', 'Job'], rels: ['FROM_SOURCE', 'HAS_VERSION', 'SUPERSEDES', 'PROCESSED_BY'] },
+      { key: 'similarity', group: 'lexical', col: ['#9DD7A5', '#7BBB84', '#1F2A37'], name: ['kg.l2.similarity', 'Similarity'],
+        desc: ['kg.l2.similarityD', 'Chunk có nội dung tương đồng, kèm điểm score.'],
+        src: ['kg.l2.similarityS', 'Transformation Job › Indexing (so sánh embedding).'],
+        nodes: [], rels: ['SIMILAR_TO'] }
+    ] }
   };
   var ICONS = {
     in: '<path d="M12 5v14M5 12h14"/>', out: '<path d="M5 12h14"/>',
@@ -139,6 +173,9 @@
     var legendHidden = new Set();
     var lmap = LAYER_MAP[data.base] || { types: {}, domains: {} }, domOf = {}, domOrder = Object.keys(lmap.domains);
     domOrder.forEach(function (dn) { lmap.domains[dn].forEach(function (nid) { domOf[nid] = dn; }); });
+    // layer model v2 (knowledge-graph page, dataset kg): null on every other mount, which keep the v1 code paths unchanged
+    var L2 = lmap.layers || null, L2BY = {};
+    if (L2) L2.forEach(function (x) { L2BY[x.key] = x; });
     var started = false;
     var expanded = new Set();
     var selected = null; // {kind, data}
@@ -325,7 +362,7 @@
     function visibleNodeIds() {
       var s = new Set();
       if (!fSelN.size && fSelR.size) {
-        data.rels.forEach(function (r) { if (inB(r.source) && inB(r.target) && fSelR.has(r.type) && !fHide.has(patKey(r))) { s.add(r.source); s.add(r.target); } });
+        data.rels.forEach(function (r) { if (relInB(r) && fSelR.has(r.type) && !fHide.has(patKey(r))) { s.add(r.source); s.add(r.target); } });
         // legend mask: drop any endpoint whose node type is legend-hidden; rebuild()'s both-endpoints-in-vis test then drops the
         // edge, so an edge touching a hidden-type node disappears and only returns when BOTH endpoints are visible again.
         if (legendHidden.size) Array.from(s).forEach(function (i) { if (legendHidden.has(labOf(i))) s.delete(i); });
@@ -351,7 +388,7 @@
         if (n.x == null) { var p = seed && seed[i]; n.x = p ? p.x + (Math.random() - 0.5) * 60 : (Math.random() - 0.5) * 400; n.y = p ? p.y + (Math.random() - 0.5) * 60 : (Math.random() - 0.5) * 300; }
         n.degree = 0; simNodes.push(n);
       });
-      simRels = data.rels.filter(function (r) { return vis.has(r.source) && vis.has(r.target) && effR(r.type) && !fHide.has(patKey(r)); })
+      simRels = data.rels.filter(function (r) { return vis.has(r.source) && vis.has(r.target) && relLayerOk(r) && effR(r.type) && !fHide.has(patKey(r)); })
         .map(function (r) { return { id: r.id, source: r.source, target: r.target, type: r.type, status: r.status, props: r.props, raw: r }; });
       simRels.forEach(function (r) { byId[r.source].degree++; if (r.target !== r.source) byId[r.target].degree++; });
       // parallel / self-loop offsets
@@ -582,12 +619,19 @@
       if (s.kind === 'node') {
         var n = s.data;
         return '<p class="ecpg-ins-msg">' + esc(T('kg.inspectMsg', 'Đã mở thông tin node {type}: {name}', { type: lblName(n.labels[0]), name: n.caption })) + '</p>' +
-          '<div class="ecpg-ins-head"><b>' + esc(n.caption) + '</b>' + n.labels.map(chip).join('') + '<span class="ecpg-ins-id">&lt;id&gt; ' + esc(n.id) + '</span></div>' + kv(n.props);
+          '<div class="ecpg-ins-head"><b>' + esc(n.caption) + '</b>' + n.labels.map(chip).join('') + '<span class="ecpg-ins-id">&lt;id&gt; ' + esc(n.id) + '</span></div>' + l2Row(layersOf(n)) + kv(n.props);
       }
       var r = s.data;
       return '<p class="ecpg-ins-msg">' + esc(T('kg.inspectMsgRel', 'Đã mở thông tin relationship {type}', { type: r.type })) + '</p>' +
         '<div class="ecpg-ins-head"><span class="ecpg-chip rel">' + esc(r.type) + '</span><span class="ecpg-ins-id">&lt;id&gt; ' + esc(r.id) + '</span></div>' +
-        '<dl class="kv ecpg-kv"><dt>' + T('kg.fromTo', 'Từ → Đến') + '</dt><dd>' + esc(r.source.caption) + ' → ' + esc(r.target.caption) + '</dd></dl>' + kv(r.props);
+        '<dl class="kv ecpg-kv"><dt>' + T('kg.fromTo', 'Từ → Đến') + '</dt><dd>' + esc(r.source.caption) + ' → ' + esc(r.target.caption) + '</dd></dl>' +
+        l2Row(L2 ? L2.filter(function (x) { return x.rels.indexOf(r.type) >= 0; }).map(function (x) { return x.key; }) : []) + kv(r.props);
+    }
+    // v2 only: "Graph layer" row (layer name + group) at the top of an inspected node / relationship
+    function l2Row(keys) {
+      if (!L2) return '';
+      var v = keys.map(function (k) { var x = L2BY[k]; return T(x.name[0], x.name[1]) + ' (' + (x.group === 'semantic' ? T('kg.f.semantic', 'Semantic') : T('kg.f.lexical', 'Lexical')) + ')'; }).join(', ');
+      return '<dl class="kv ecpg-kv"><dt>' + esc(T('kg.f.layers', 'Graph layer')) + '</dt><dd>' + esc(v || T('kg.l2.byEnds', 'Theo quan hệ nối tới node')) + '</dd></dl>';
     }
     // KG append path: accumulate each new selection as an entry in a scrollable role="log" inside inspTarget (the .prop-card),
     // so previous entries remain, newest is visible and announced. Consecutive clicks on the SAME element do not duplicate.
@@ -692,7 +736,19 @@
     function labOf(nid) { return byId[nid].labels[0]; }
     function relCol(t) { var c = REL_PALETTE[Math.max(0, typeOrder.indexOf(t)) % REL_PALETTE.length]; return [c, d3.color(c).darker(0.6).formatHex(), captionFor(c)]; }
     // ---- graph layers (ecpg-filter-v2) ----
-    function layersOf(n) { var out = []; (lmap.types[n.labels[0]] || []).forEach(function (k) { if (k === 'domain') { if (domOf[n.id]) out.push('dom:' + domOf[n.id]); } else out.push(k); }); return out; }
+    // v2: a relationship is in the active layer set when its type belongs to a selected layer (always true without v2 / selection)
+    function relLayerOk(r) { if (!L2 || !fSelL.size) return true; var ok = false; fSelL.forEach(function (k) { if (L2BY[k] && L2BY[k].rels.indexOf(r.type) >= 0) ok = true; }); return ok; }
+    // v2: node keys of one layer within the shown set = nodes of the layer's node types + endpoints of its relationships
+    function l2Nodes(x) {
+      var s = new Set();
+      shown.forEach(function (i) { if (x.nodes.indexOf(labOf(i)) >= 0) s.add(i); });
+      data.rels.forEach(function (r) { if (x.rels.indexOf(r.type) >= 0 && shown.has(r.source) && shown.has(r.target)) { s.add(r.source); s.add(r.target); } });
+      return s;
+    }
+    function l2Rels(x) { return data.rels.filter(function (r) { return x.rels.indexOf(r.type) >= 0 && shown.has(r.source) && shown.has(r.target); }).length; }
+    function l2In(nid) { var ok = false; fSelL.forEach(function (k) { if (!ok && L2BY[k] && l2Nodes(L2BY[k]).has(nid)) ok = true; }); return ok; }
+    function layersOf(n) { if (L2) return L2.filter(function (x) { return x.nodes.indexOf(n.labels[0]) >= 0; }).map(function (x) { return x.key; });
+      var out = []; (lmap.types[n.labels[0]] || []).forEach(function (k) { if (k === 'domain') { if (domOf[n.id]) out.push('dom:' + domOf[n.id]); } else out.push(k); }); return out; }
     // auto-derived layer set from the current node/rel selection (empty unless autoLayer). Pure function of (fSelN, fSelR, shown):
     // never written back into fSelL, so it is idempotent and auto-unticks when the last producing type is deselected.
     // Endpoint gating uses shown membership (NOT inB) to avoid recursion with lp/activeL; only keys present in availLayers() count.
@@ -709,9 +765,12 @@
     // active layer set that drives narrowing = manual (fSelL) ∪ auto-derived. Equals fSelL when autoLayer is off.
     function activeL() { if (!autoLayer) return fSelL; var s = new Set(fSelL); autoSelL().forEach(function (k) { s.add(k); }); return s; }
     function lp(n) { var al = activeL(); if (!al.size) return true; return layersOf(n).some(function (k) { return al.has(k); }); }
-    function inB(nid) { return shown.has(nid) && lp(byId[nid]); }
-    function relInB(r) { return inB(r.source) && inB(r.target); }
+    function inB(nid) { if (L2) return shown.has(nid) && (!fSelL.size || l2In(nid)); return shown.has(nid) && lp(byId[nid]); }
+    function relInB(r) { return inB(r.source) && inB(r.target) && relLayerOk(r); }
     function availLayers() {
+      if (L2) return L2.map(function (x) {
+        return { key: x.key, name: T(x.name[0], x.name[1]), group: x.group, dom: false, n: l2Nodes(x).size, r: l2Rels(x), sel: fSelL.has(x.key), auto: false };
+      });
       var c = {}; shown.forEach(function (i) { layersOf(byId[i]).forEach(function (k) { c[k] = (c[k] || 0) + 1; }); });
       var keys = domOrder.map(function (dn) { return 'dom:' + dn; }).concat(LAYERS);
       return keys.filter(function (k) { return c[k]; }).map(function (k) {
@@ -777,14 +836,17 @@
       return '<section class="ecpg-fs" data-ecpg-fsec="' + kind + '" aria-labelledby="' + hid + '"><div class="ecpg-fs-head"><h3 id="' + hid + '">' + esc(isN ? T('kg.f.nodes', 'Loại node') : T('kg.f.rels', 'Loại relationship')) + '</h3>' +
         '<span class="ecpg-fs-n" data-ecpg-selcount="' + kind + '">' + esc(T('kg.f.selCount', '{n}/{all} đã chọn', { n: nSel, all: items.length })) + '</span>' +
         chkHtml(kind, items, isN ? T('kg.f.selAllNodes', 'Chọn tất cả loại node') : T('kg.f.selAllRels', 'Chọn tất cả loại relationship')) + '</div>' +
+        (L2 ? '<p class="ecpg-fs-rule">' + esc(isN ? T('kg.l2.ruleN', 'Chỉ liệt kê loại node có trong layer đã chọn. Chọn loại node: chỉ hiện node thuộc loại đó và quan hệ giữa chúng.')
+          : T('kg.l2.ruleR', 'Chỉ liệt kê loại quan hệ có trong layer đã chọn. Chọn loại quan hệ: chỉ hiện quan hệ đó; nếu chưa chọn loại node thì hiện kèm hai node đầu.')) + '</p>' : '') +
         '<div class="ecpg-tags" role="group" aria-labelledby="' + hid + '">' + items.map(function (it) { return tagHtml(kind, it); }).join('') + '</div></section>';
     }
     function layerItems() {
       return availLayers().map(function (x) {
-        return { key: x.key, label: x.name, n: x.n, sel: x.sel, auto: x.auto, dom: x.dom, group: x.group, groupName: x.name, col: LAYER_COL[x.dom ? 'dom' : x.key] };
+        return { key: x.key, label: x.name, n: x.n, sel: x.sel, auto: x.auto, dom: x.dom, group: x.group, groupName: x.name, r: x.r, col: L2 ? L2BY[x.key].col : LAYER_COL[x.dom ? 'dom' : x.key] };
       });
     }
     function layerSecHtml() {
+      if (L2) return layerSecHtml2();
       var hid = id + '-fs-layer', items = layerItems(), nSel = items.filter(function (x) { return x.sel; }).length;
       var grp = function (g, title, aria) {
         var its = items.filter(function (x) { return x.group === g; }); if (!its.length) return '';
@@ -798,6 +860,39 @@
         '<span class="ecpg-fs-n" data-ecpg-selcount="layer">' + esc(T('kg.f.selCount', '{n}/{all} đã chọn', { n: nSel, all: items.length })) + '</span></div>' +
         grp('semantic', T('kg.f.semantic', 'Semantic'), T('kg.f.selAllSem', 'Chọn tất cả layer Semantic')) +
         grp('lexical', T('kg.f.lexical', 'Lexical'), T('kg.f.selAllLex', 'Chọn tất cả layer Lexical')) + '</section>';
+    }
+    // v2 layer section: every layer always listed (0 = nothing of that layer in the current view, disabled); tooltip = what it
+    // holds + where it comes from; an info box spells out the selected layers so testers can check the canvas against it
+    function l2TagHtml(it) {
+      var x = L2BY[it.key], tip = T(x.desc[0], x.desc[1]) + ' ' + T('kg.l2.srcLbl', 'Nguồn: {s}', { s: T(x.src[0], x.src[1]) });
+      return '<button class="ecpg-tag layer" type="button" data-ecpg-key="layer:' + esc(it.key) + '" data-ecpg-tag="layer:' + esc(it.key) + '" aria-pressed="' + it.sel + '"' + (it.n ? '' : ' disabled') +
+        ' title="' + esc(tip) + '" style="--ecpg-tag-c:' + it.col[0] + ';--ecpg-tag-s:' + it.col[1] + ';--ecpg-tag-t:' + it.col[2] + '">' +
+        '<span class="ecpg-hole" aria-hidden="true"></span><span class="ecpg-tag-l">' + esc(it.label) + '</span><span class="ecpg-tag-n" aria-hidden="true">' + it.n + '</span>' +
+        '<span class="ecpg-sr">, ' + esc(T('kg.l2.nUnit', '{n} node, {r} quan hệ', { n: it.n, r: it.r })) + '</span></button>';
+    }
+    function l2InfoHtml(items) {
+      var sel = items.filter(function (x) { return x.sel; });
+      if (!sel.length) return '<p class="ecpg-l2-info" data-ecpg-l2info="none">' + esc(T('kg.l2.none', 'Chưa chọn layer: graph hiện mọi layer. Chọn một hoặc nhiều layer để chỉ giữ quan hệ thuộc layer đó và các node ở hai đầu.')) + '</p>';
+      return '<dl class="ecpg-l2-info" data-ecpg-l2info="sel">' + sel.map(function (it) {
+        var x = L2BY[it.key];
+        return '<dt>' + esc(it.label) + ' <span class="ecpg-l2-n">' + esc(T('kg.l2.nUnit', '{n} node, {r} quan hệ', { n: it.n, r: it.r })) + '</span></dt>' +
+          '<dd>' + esc(T(x.desc[0], x.desc[1])) + '</dd>' +
+          '<dd><b>' + esc(T('kg.l2.nodesLbl', 'Loại node')) + ':</b> ' + esc(x.nodes.length ? x.nodes.map(lblName).join(', ') : T('kg.l2.endpoints', 'không có loại riêng, lấy node ở hai đầu quan hệ')) + '</dd>' +
+          '<dd><b>' + esc(T('kg.l2.relsLbl', 'Loại quan hệ')) + ':</b> ' + esc(x.rels.join(', ')) + '</dd>' +
+          '<dd><b>' + esc(T('kg.l2.srcHead', 'Nguồn dữ liệu')) + ':</b> ' + esc(T(x.src[0], x.src[1])) + '</dd>';
+      }).join('') + '</dl>';
+    }
+    function layerSecHtml2() {
+      var hid = id + '-fs-layer', items = layerItems(), nSel = items.filter(function (x) { return x.sel; }).length;
+      var grp = function (g, title, aria) {
+        var its = items.filter(function (x) { return x.group === g; }), gid = id + '-lg-' + g.slice(0, 3);
+        return '<div class="ecpg-lg" data-ecpg-lgroup="' + g + '"><div class="ecpg-lg-head"><span class="ecpg-lg-t" id="' + gid + '">' + esc(title) + '</span>' + chkHtml(g, its.filter(function (x) { return x.n; }), aria) + '</div>' +
+          '<div class="ecpg-tags" role="group" aria-labelledby="' + gid + '">' + its.map(l2TagHtml).join('') + '</div></div>';
+      };
+      return '<section class="ecpg-fs ecpg-fs-layer" data-ecpg-fsec="layer" aria-labelledby="' + hid + '"><div class="ecpg-fs-head"><h3 id="' + hid + '">' + esc(T('kg.f.layers', 'Graph layer')) + '</h3>' +
+        '<span class="ecpg-fs-n" data-ecpg-selcount="layer">' + esc(T('kg.f.selCount', '{n}/{all} đã chọn', { n: nSel, all: items.length })) + '</span></div>' +
+        grp('semantic', T('kg.f.semantic', 'Semantic'), T('kg.f.selAllSem', 'Chọn tất cả layer Semantic')) +
+        grp('lexical', T('kg.f.lexical', 'Lexical'), T('kg.f.selAllLex', 'Chọn tất cả layer Lexical')) + l2InfoHtml(items) + '</section>';
     }
     function triHtml() {
       var hid = id + '-fs-tri', tris = listTriples(), x = fHide.size, body;
@@ -844,7 +939,7 @@
     }
     function setAll(group, on) {
       if (group === 'semantic' || group === 'lexical') {
-        availLayers().filter(function (x) { return x.group === group; }).forEach(function (x) { if (on) fSelL.add(x.key); else fSelL.delete(x.key); });
+        availLayers().filter(function (x) { return x.group === group && (!L2 || x.n); }).forEach(function (x) { if (on) fSelL.add(x.key); else fSelL.delete(x.key); });
         return;
       }
       var s = group === 'node' ? fSelN : fSelR; s.clear();
