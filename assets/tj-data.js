@@ -41,8 +41,6 @@
   // preset = PRESET_CHANGE (ADR-007 re-enrichment after a confirmed taxonomy / ontology preset switch): source "preset",
   //   no cancel, no re-run for anyone: the run has no action button (web.tj.presetChange label, as in the app).
   var JOBS = [
-    // URD Transformation Job v1.4 (BR-J10): re-upload of the 2 failed files of #4817 (same SHA-256) attaches to DOC-002440 / 002441 instead of a duplicate error
-    { id: '4828', trigger: ['tj.manualUpload', 'Tải lên thủ công'], sourceName: 'manual · FAQ Ngân hàng số', kb: 'faq-digital', kbName: 'FAQ Ngân hàng số', source: 's3://ecp-landing/manual/faq-digital/', status: 'done', total: 2, ok: 2, err: 0, day: 0, start: [8, 30], dur: 180 },
     { id: '4827', trigger: ['web.tj.presetChange', 'Đổi preset (chạy lại enrichment)'], preset: true, sourceName: 'preset · Quy định nhân sự', kb: 'hr', kbName: 'Quy định nhân sự', source: 's3://ecp-landing/preset/', status: 'running', total: 4, ok: 2, err: 0, day: 0, start: [10, 44], dur: 300 },
     { id: '4826', trigger: ['tj.sourceChanged12NewFiles', 'Source thay đổi (12 file mới, 3 sửa)'], sourceName: 'Landing · Tín dụng KHDN', kb: 'credit-corp', kbName: 'Quy trình tín dụng doanh nghiệp', source: 's3://ecp-landing/tin-dung/khdn/', status: 'running', total: 128, ok: 86, err: 4, day: 0, start: [10, 42], dur: 480 },
     { id: '4825', trigger: ['tj.scheduled', 'Lịch định kỳ'], sourceName: 'Landing · Thẻ', kb: 'card', kbName: 'Sản phẩm thẻ tín dụng', source: 's3://ecp-landing/the/', status: 'running', total: 86, ok: 12, err: 0, day: 0, start: [10, 38], dur: 720 },
@@ -84,17 +82,6 @@
     '4823': [
       { id: 'DOC-000771', name: 'so-tay-T24-p3.pdf', docType: 'Hướng dẫn', mb: 22.5, change: 'modified', st: 'error', stage: 1, err: 'ocrTimeout', at: [10, 12, 40], info: { acq: [9, 55, 30] } },
       { id: 'DOC-000772', name: 'bieu-mau-scan-12.jpg', docType: 'Biểu mẫu', mb: 0.9, change: 'new', st: 'error', stage: 1, err: 'lowRes', at: [10, 14, 5], info: { acq: [9, 55, 30] } }
-    ],
-    // #4817: the 2 failed files were re-uploaded and processed again in #4828 (redoneIn): no Re-run left in #4817
-    '4817': [
-      { id: 'DOC-002440', name: 'faq-mbank-dang-nhap.png', mb: 0.4, change: 'new', st: 'error', stage: 1, err: 'corrupted', redoneIn: '4828', at: [0, 40, 26], info: { acq: [0, 40, 20] } },
-      { id: 'DOC-002441', name: 'faq-ekyc.pdf', mb: 4.1, change: 'modified', st: 'error', stage: 1, err: 'corrupted', redoneIn: '4828', at: [0, 40, 27], info: { acq: [0, 40, 20] } },
-      { id: 'DOC-002442', name: 'faq-chuyen-tien-nhanh.pptx', mb: 7.8, change: 'modified', st: 'done', stage: 5, at: [0, 40, 34], info: { acq: [0, 40, 20], pages: 12, ocr: 0, chunks: 18, vectors: 18 } }
-    ],
-    // #4828: same documents (codes kept), attached at acquisition; attachFrom = the job where they had failed
-    '4828': [
-      { id: 'DOC-002440', name: 'faq-mbank-dang-nhap.png', mb: 0.4, change: 'new', st: 'done', stage: 5, attachFrom: '4817', at: [8, 31, 40], info: { acq: [8, 30, 12], pages: 1, ocr: 1, chunks: 2, vectors: 2 } },
-      { id: 'DOC-002441', name: 'faq-ekyc.pdf', mb: 4.1, change: 'modified', st: 'done', stage: 5, attachFrom: '4817', at: [8, 32, 55], info: { acq: [8, 30, 12], pages: 6, ocr: 0, chunks: 14, vectors: 14 } }
     ],
     '4822': [
       { id: 'DOC-000533', name: 'tai-lieu-dinh-kem-mbank.zip', mb: 14.2, change: 'new', st: 'error', stage: 0, err: 'unsupportedZip', at: [9, 10, 4], info: {} },
@@ -274,14 +261,13 @@
     var glyph = job.status === 'done' ? 'check' : job.status === 'skipped' ? 'dash' : null;
     return '<div class="job-st job-prog tone-' + s[2] + '">' + ringHtml(s[2], pct, glyph, glyph ? label : label + ' ' + pct + '%') + '</div>';
   }
-  function canRerunDoc(d) { return d.st === 'error' && !d.redoneIn; }
   function docErr(d) { return d.err && ERR[d.err] ? T(ERR[d.err][0], ERR[d.err][1]) : ''; }
   function docStatusHtml(d) {
     var s = DOC_ST[d.st], label = T(s[0], s[1]);
     var pct = d.st === 'waiting' ? 0 : d.pct != null ? d.pct : null;
     var glyph = d.st === 'done' ? 'check' : (d.st === 'error' && pct == null) ? 'alert' : null;
     var aria = pct != null && !glyph ? label + ' ' + pct + '%' : label;
-    return statusHtml(s[2], '', s[0], s[1], d.redoneIn ? T('jd.redoneIn', 'Đã xử lý lại ở job #{id}', { id: d.redoneIn }) : docErr(d));
+    return statusHtml(s[2], '', s[0], s[1], docErr(d));
   }
   function docProgressHtml(d) {
     var s = DOC_ST[d.st], label = T(s[0], s[1]);
@@ -292,7 +278,7 @@
 
   window.ECP_TJ = {
     STAGES: STAGES, JOBS: JOBS, DOC_ST: DOC_ST, JOB_ST: JOB_ST,
-    job: jobById, docs: docsFor, comps: function (job) { return COMP[job.kb] || []; }, ringHtml: ringHtml, statusHtml: statusHtml, kbSummaries: kbSummaries, kbStatusHtml: kbStatusHtml, kbProgressHtml: kbProgressHtml, jobPct: jobPct, jobStatusHtml: jobStatusHtml, docStatusHtml: docStatusHtml, jobProgressHtml: jobProgressHtml, docProgressHtml: docProgressHtml, docErr: docErr, canRerunDoc: canRerunDoc,
+    job: jobById, docs: docsFor, comps: function (job) { return COMP[job.kb] || []; }, ringHtml: ringHtml, statusHtml: statusHtml, kbSummaries: kbSummaries, kbStatusHtml: kbStatusHtml, kbProgressHtml: kbProgressHtml, jobPct: jobPct, jobStatusHtml: jobStatusHtml, docStatusHtml: docStatusHtml, jobProgressHtml: jobProgressHtml, docProgressHtml: docProgressHtml, docErr: docErr,
     fmtTime: fmtTime, fmtStart: fmtStart, fmtClock: fmtClock, fmtDur: fmtDur, fmtSize: fmtSize, fmtInt: fmtInt, fileType: fileType, fileIco: fileIco, formatLabel: formatLabel,
     kbHref: function (job) { return 'ek-knowledge-detail.html?kb=' + encodeURIComponent(job.kb); },
     detailHref: function (job) { return 'job-detail.html?job=' + encodeURIComponent(job.id); },

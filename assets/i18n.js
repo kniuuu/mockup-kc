@@ -4442,8 +4442,6 @@
     'jd.stepState.is-failed': ['Lỗi', 'Error'], 'jd.stepState.is-pending': ['Chưa chạy', 'Not started'],
     'jd.n.downloaded': ['Đã tải · checksum mới · {t}', 'Downloaded · new checksum · {t}'],
     'jd.n.pages': ['{p} trang · OCR {o} trang', '{p} pages · OCR {o} pages'],
-    'jd.redoneIn': ['Đã xử lý lại ở job #{id}', 'Processed again in job #{id}'], 'jd.redoneInLong': ['Tài liệu đã được tải lại và xử lý ở job #{id}.', 'This document was re-uploaded and processed in job #{id}.'], 'jd.openJob': ['Mở job #{id}', 'Open job #{id}'],
-    'jd.n.attached': ['Gắn vào {doc} (tải lại tài liệu lỗi ở job #{id})', 'Attached to {doc} (re-upload of a failed document from job #{id})'],
     'jd.n.chunks': ['{n} chunk', '{n} chunks'], 'jd.n.vectors': ['{a} / {b} vector', '{a} / {b} vectors'],
     'jd.st.processing': ['Đang xử lý', 'Processing'],
     'jd.err.ocrBlurry': ['Lỗi OCR (ảnh mờ)', 'OCR error (blurry)'], 'jd.err.corrupted': ['Tệp bị hỏng', 'Corrupted file'],

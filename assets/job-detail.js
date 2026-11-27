@@ -80,7 +80,7 @@
       });
     }
     function renderBulk() {
-      var n = docs.filter(TJ.canRerunDoc).length;
+      var n = docs.filter(function (d) { return d.st === 'error'; }).length;
       bulk.hidden = !n;
       bulk.textContent = T('jd.rerunFailed', 'Chạy lại {n} file lỗi', { n: TJ.fmtInt(n) });
       bulk.setAttribute('data-title', T('jd.rerunFailedTitle', 'Chạy lại {n} file lỗi trong #{id}?', { n: TJ.fmtInt(n), id: job.id }));
@@ -146,7 +146,6 @@
         var n = '';
         if (s.k === 'acquisition') {
           if (d.st === 'waiting') n = note(T('tj.notStarted', 'Chưa bắt đầu'));
-          else if (cls === 'is-done' && d.attachFrom) n = note(T('jd.n.attached', 'Gắn vào {doc} (tải lại tài liệu lỗi ở job #{id})', { doc: d.id, id: d.attachFrom }));
           else if (cls === 'is-done' && info.acq) n = note(T('jd.n.downloaded', 'Đã tải · checksum mới · {t}', { t: TJ.fmtTime(job, info.acq) }));
         }
         if (s.k === 'processing' && cls === 'is-done' && info.pages != null) n = note(T('jd.n.pages', '{p} trang · OCR {o} trang', { p: TJ.fmtInt(info.pages), o: TJ.fmtInt(info.ocr || 0) }));
@@ -176,9 +175,8 @@
         '<dt>' + esc(T('qap.dChange', 'Thay đổi')) + '</dt><dd>' + change + '</dd>' +
         '<dt>' + esc(T('web.tj.checksum', 'Mã kiểm tra (SHA-256)')) + '</dt><dd class="mono jd-checksum text-xs">' + esc(sum(d.id)) + '</dd></dl>' +
         (err ? '<p class="jd-errsum" role="note"><b>' + esc(T(stage.key, stage.label)) + ':</b> ' + esc(err) + '</p>' : '') +
-        (d.redoneIn ? '<p class="jd-errsum" role="note">' + esc(T('jd.redoneInLong', 'Tài liệu đã được tải lại và xử lý ở job #{id}.', { id: d.redoneIn })) + ' <a class="link" href="job-detail.html?job=' + esc(d.redoneIn) + '">' + esc(T('jd.openJob', 'Mở job #{id}', { id: d.redoneIn })) + '</a></p>' : '') +
         '<h3 class="sub-h jd-pipe-h">' + esc(T('jd.pipeline', 'Pipeline xử lý')) + '</h3>' + pipelineHtml(d);
-      sideFoot.innerHTML = (TJ.canRerunDoc(d) ? '<button class="btn btn-secondary" type="button" data-jd-rerun data-roles-disable="steward" data-reason="Cần vai trò Owner hoặc Admin">' + esc(T('tj.rerun', 'Chạy lại')) + '</button>' : '') +
+      sideFoot.innerHTML = (d.st === 'error' ? '<button class="btn btn-secondary" type="button" data-jd-rerun data-roles-disable="steward" data-reason="Cần vai trò Owner hoặc Admin">' + esc(T('tj.rerun', 'Chạy lại')) + '</button>' : '') +
         '<a class="btn btn-secondary" href="' + esc(TJ.kbHref(job)) + '">' + esc(T('tj.openKb', 'Mở tri thức')) + '</a>';
     }
     // compact job + KB context row: job ID, trigger, KB, source (name, path as secondary + tooltip), start date
