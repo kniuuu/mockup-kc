@@ -53,7 +53,7 @@
     body.innerHTML = '<table class="table doc-table job-table"><caption data-i18n="tj.runs" class="sr-only">Lượt chạy</caption><colgroup><col><col class="kbj-c-info"><col class="jc-st"><col class="jc-files"><col class="kbj-c-time">' + (withAct ? '<col class="jc-act">' : '') + '</colgroup>' +
       '<thead><tr><th data-i18n="tj.runs" scope="col">Lượt chạy</th><th data-i18n="web.tj.runInfo" scope="col">Thông tin lượt chạy</th><th data-i18n="common.status" scope="col">Trạng thái</th><th data-i18n="web.tj.volume" scope="col">Khối lượng</th><th data-i18n="web.tj.time" scope="col">Thời gian</th>' + (withAct ? '<th scope="col"><span data-i18n="common.actions" class="sr-only">Hành động</span></th>' : '') + '</tr></thead><tbody>' +
       list.map(function (j) {
-        var files = j.status === 'skipped' ? T('tj.n0Changes', '0 thay đổi') : j.total == null ? '–' : T('web.tj.filesOf', '{a} / {b} file', { a: TJ.fmtInt(j.ok + j.err), b: TJ.fmtInt(j.total) });
+        var files = j.status === 'skipped' ? T('tj.n0Changes', '0 thay đổi') : j.total == null ? '–' : T('web.tj.filesOf', '{a} / {b} file', { a: TJ.fmtInt(j.ok), b: TJ.fmtInt(j.total) });
         var info = j.trigger[0] === 'tj.manualUpload' ? T('web.tj.uploadJob', 'Tải lên') : j.trigger[0] === 'tj.approvedEdit' ? T('web.tj.editJob', 'Chỉnh sửa') : T('web.tj.syncJob', 'Đồng bộ');
         var act = j.preset ? null : ACTIVE.indexOf(j.status) >= 0 ? ['cancel', T('common.cancel', 'Hủy'), 'M6 6l12 12M18 6L6 18'] : j.status === 'failed' || j.status === 'partial' ? ['rerun', T('tj.rerun', 'Chạy lại'), 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7'] : null;
         var isOpen = open === j.id;

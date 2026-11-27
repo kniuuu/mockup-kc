@@ -1,8 +1,10 @@
 /* ECP mockups: Transformation Job mock data + shared status rendering (transformation-job.html, job-detail.html).
  * - Mock only: a real build reads jobs and their documents from the job service. Nothing here is persisted;
  *   Cancel / Re-run change the in-memory records for the current page only.
- * - Job progress = documents that reached a final state (completed or error) / total documents.
- *   It is processing progress, not the success rate: a job can be 100% processed and still be Errors / Partially completed.
+ * - Job progress while running = documents that reached a final state (completed or error) / total documents.
+ *   Partially completed (URD Transformation Job v1.3, BR-J6) shows the success rate instead: completed / total documents,
+ *   rounded to a whole percent and kept within 1–99%, and the ring fills to that same value.
+ * - Volume of a run = completed documents / total documents (same figures as Files on the KB summary).
  * - Documents: the named ones carry their own progress, stage, error reason and stage notes. Filler documents (to reach
  *   the job's file count) are only Waiting (not started), Completed, or, where the job record says so, Error with the
  *   job's own reason and no percentage, so no progress value or error is made up for them.
@@ -49,7 +51,8 @@
     { id: '4820', trigger: ['tj.sourceChanged', 'Source thay đổi'], sourceName: 'Landing · Nhân sự', kb: 'hr', kbName: 'Quy định nhân sự', source: 's3://ecp-landing/nhan-su/', status: 'done', total: 4, ok: 4, err: 0, day: -1, start: [17, 12], dur: 120 },
     { id: '4819', trigger: ['tj.scheduled', 'Lịch định kỳ'], sourceName: 'Landing · Thẻ', kb: 'card', kbName: 'Sản phẩm thẻ tín dụng', source: 's3://ecp-landing/the/', status: 'skipped', total: 0, ok: 0, err: 0, day: -1, start: [2, 0], dur: 30, note: ['tj.deduplicatedChecksumUnchanged', 'Deduplicated: checksum không đổi'] },
     // UPLOAD = POST /document-uploads (kb-upload.html): source "manual"
-    { id: '4818', trigger: ['tj.manualUpload', 'Tải lên thủ công'], sourceName: 'manual · FAQ Ngân hàng số', kb: 'faq-digital', kbName: 'FAQ Ngân hàng số', source: 's3://ecp-landing/manual/faq-digital/', status: 'done', total: 3, ok: 3, err: 0, day: -1, start: [1, 15], dur: 95 }
+    { id: '4818', trigger: ['tj.manualUpload', 'Tải lên thủ công'], sourceName: 'manual · FAQ Ngân hàng số', kb: 'faq-digital', kbName: 'FAQ Ngân hàng số', source: 's3://ecp-landing/manual/faq-digital/', status: 'done', total: 3, ok: 3, err: 0, day: -1, start: [1, 15], dur: 95 },
+    { id: '4817', trigger: ['tj.manualUpload', 'Tải lên thủ công'], sourceName: 'manual · FAQ Ngân hàng số', kb: 'faq-digital', kbName: 'FAQ Ngân hàng số', source: 's3://ecp-landing/manual/faq-digital/', status: 'partial', total: 3, ok: 1, err: 2, day: -1, start: [0, 40], dur: 240, fillErr: 'corrupted' }
   ];
 
   // Named documents. st: processing | error | done | waiting; stage = index in STAGES; sub = index in that stage's subs.
@@ -96,7 +99,7 @@
   };
   var EXTS = ['pdf', 'docx', 'pdf', 'xlsx', 'pdf', 'pptx', 'png'];
   var FT = { pdf: ['PDF', 'ft-pdf', 'PDF'], docx: ['DOC', 'ft-word', 'DOCX'], xlsx: ['XLS', 'ft-xls', 'XLSX'], pptx: ['PPT', 'ft-ppt', 'PPTX'], png: ['IMG', 'ft-img', 'PNG'], jpg: ['IMG', 'ft-img', 'JPG'], zip: ['ZIP', 'ft-pkg', 'ZIP'] };
-  var DOC_BASE = { '4827': 1960, '4818': 2400, '4826': 1840, '4825': 2210, '4823': 410, '4822': 470, '4821': 1700, '4820': 1960 };
+  var DOC_BASE = { '4827': 1960, '4818': 2400, '4826': 1840, '4825': 2210, '4823': 410, '4822': 470, '4821': 1700, '4820': 1960, '4817': 2440 };
 
   // Compilation of a KB's knowledge packages (GET /package-compilations?knowledgeBaseId=): one row per chosen package
   // type, shown on every job of the KB (none chosen: no section). st: notStarted | running | done | failed | cancelled;
@@ -200,7 +203,11 @@
     error: ['common.errors', 'Lỗi', 'error'],
     done: ['common.completed', 'Hoàn tất', 'success']
   };
-  function jobPct(job) { return job.total ? Math.round((job.ok + job.err) / job.total * 100) : 0; }
+  function jobPct(job) {
+    if (!job.total) return 0;
+    if (job.status === 'partial') return Math.min(99, Math.max(1, Math.round(job.ok / job.total * 100)));
+    return Math.round((job.ok + job.err) / job.total * 100);
+  }
   // pct: number or null (no meaningful value); glyph: 'check' | 'dash' | 'alert' | null
   function ringHtml(tone, pct, glyph, aria) {
     var inner = glyph === 'check' ? CHECK : glyph === 'dash' ? '–' : glyph === 'alert' ? '!' : pct + '%';
